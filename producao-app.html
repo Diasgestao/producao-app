@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema MES de Produção</title>
+    <title>Sistema MES de Produção Integrado</title>
     <style>
         :root {
             --bg-dark: #0f172a;
@@ -14,6 +14,8 @@
             --text-muted: #94a3b8;
             --border: #334155;
             --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         body {
@@ -38,8 +40,6 @@
             margin-bottom: 20px;
         }
 
-        h1, h2, h3 { margin: 0; }
-
         .nav-tabs {
             display: flex;
             gap: 10px;
@@ -54,6 +54,7 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
         }
 
         .tab-btn.active {
@@ -80,7 +81,7 @@
 
         th, td {
             border: 1px solid var(--border);
-            padding: 12px;
+            padding: 10px;
             text-align: left;
         }
 
@@ -92,7 +93,8 @@
             border: 1px solid var(--border);
             padding: 8px;
             border-radius: 4px;
-            width: 90%;
+            width: 95%;
+            box-sizing: border-box;
         }
 
         .btn {
@@ -107,14 +109,30 @@
 
         .btn:hover { background: var(--primary-hover); }
 
-        /* Estilo da Ordem de Produção (Ficha Técnica) */
+        .btn-add {
+            background: var(--success);
+            margin-bottom: 10px;
+        }
+
+        .btn-add:hover { background: #059669; }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Estilo da Ordem de Produção (Ficha Técnica para Impressão) */
         .op-card {
             background: white;
             color: black;
             padding: 30px;
             border-radius: 8px;
-            max-width: 700px;
+            max-width: 750px;
             margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
         .op-header {
@@ -136,7 +154,7 @@
             margin-top: 20px;
         }
 
-        /* Regras de Impressão (Oculta a interface e mostra apenas a OP) */
+        /* Regras de Impressão Nativa (Celular e PC) */
         @media print {
             body * { visibility: hidden; }
             #op-print-area, #op-print-area * { visibility: visible; }
@@ -156,101 +174,105 @@
 
 <div class="container">
     <header class="no-print">
-        <h2>Sistema MES - Chão de Fábrica</h2>
-        <span>Status: <strong>Operacional</strong></span>
+        <div>
+            <h2>Sistema MES - Chão de Fábrica</h2>
+            <small style="color: var(--text-muted);">Painel de Controle e Impressão Industrial</small>
+        </div>
+        <span>Status: <strong style="color: var(--success);">● Operacional</strong></span>
     </header>
 
     <div class="nav-tabs no-print">
-        <button class="tab-btn active" onclick="switchTab('setores')">Setores Produtivos</button>
-        <button class="tab-btn" onclick="switchTab('programacao')">Programação Semanal</button>
-        <button class="tab-btn" onclick="switchTab('op')">Imprimir OP</button>
+        <button class="tab-btn active" onclick="switchTab('setores', this)">Setores Produtivos</button>
+        <button class="tab-btn" onclick="switchTab('programacao', this)">Programação Semanal</button>
+        <button class="tab-btn" onclick="switchTab('op', this)">Imprimir OP</button>
     </div>
 
     <!-- 1. SETOR PRODUTIVO (EDITÁVEL) -->
     <div id="setores" class="tab-content active">
         <h3>Gestão de Setores Produtivos</h3>
-        <p style="color: var(--text-muted);">Altere os campos diretamente na tabela para atualizar a capacidade em tempo real.</p>
+        <p style="color: var(--text-muted);">Edite os campos abaixo ou adicione novos setores para atualizar a capacidade em tempo real.</p>
+        <button class="btn btn-add" onclick="addSetor()">+ Adicionar Setor</button>
         <table>
             <thead>
                 <tr>
-                    <th>Código</th>
+                    <th style="width: 15%;">Código</th>
                     <th>Nome do Setor</th>
-                    <th>Capacidade (h/dia)</th>
-                    <th>Status MES</th>
+                    <th style="width: 20%;">Capacidade (h/dia)</th>
+                    <th style="width: 20%;">Status MES</th>
                 </tr>
             </thead>
-            <tbody id="table-setores">
-                <!-- Conteúdo dinâmico -->
-            </tbody>
+            <tbody id="table-setores"></tbody>
         </table>
         <br>
-        <button class="btn" onclick="saveSetores()">Salvar Setores</button>
+        <button class="btn" onclick="saveSetores()">Salvar Alterações dos Setores</button>
     </div>
 
     <!-- 2. PROGRAMAÇÃO SEMANAL (EDITÁVEL) -->
     <div id="programacao" class="tab-content">
         <h3>Programação Semanal de Produção</h3>
-        <p style="color: var(--text-muted);">Sequenciamento das OPs editável por dia da semana.</p>
+        <p style="color: var(--text-muted);">Sequenciamento dinâmico das OPs editável por dia da semana.</p>
         <table>
             <thead>
                 <tr>
-                    <th>Dia</th>
-                    <th>OP Vinculada</th>
+                    <th style="width: 15%;">Dia</th>
+                    <th style="width: 15%;">Nº OP</th>
                     <th>Produto / Descrição</th>
-                    <th>Qtd Prevista</th>
-                    <th>Status</th>
+                    <th style="width: 15%;">Qtd Prevista</th>
+                    <th style="width: 20%;">Status MES</th>
                 </tr>
             </thead>
-            <tbody id="table-programacao">
-                <!-- Conteúdo dinâmico -->
-            </tbody>
+            <tbody id="table-programacao"></tbody>
         </table>
         <br>
-        <button class="btn" onclick="saveProgramacao()">Salvar Programação</button>
+        <button class="btn" onclick="saveProgramacao()">Salvar Programação Semanal</button>
     </div>
 
-    <!-- 3. ORDEM DE PRODUÇÃO (IMPRESSÃO CORRIGIDA) -->
+    <!-- 3. ORDEM DE PRODUÇÃO (IMPRESSÃO INTEGRADA) -->
     <div id="op" class="tab-content">
-        <div class="no-print" style="margin-bottom: 20px; text-align: right;">
-            <button class="btn" onclick="executarImpressao()">🖨️ Imprimir Ordem de Produção</button>
+        <div class="no-print" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <label>Selecionar OP para visualizar: 
+                <select id="op-selector" onchange="loadOPDetails(this.value)" style="width: auto; display: inline-block; margin-left: 10px;">
+                </select>
+            </label>
+            <button class="btn" onclick="executarImpressao()">🖨️ Imprimir OP Selecionada</button>
         </div>
 
-        <!-- Área formatada apenas para documento da OP -->
+        <!-- Área de Impressão Formata Ficha Técnica -->
         <div id="op-print-area">
             <div class="op-card">
                 <div class="op-header">
                     <div>
                         <h2>ORDEM DE PRODUÇÃO (OP)</h2>
-                        <small>Sistema MES - Controle Industrial</small>
+                        <small>Sistema MES - Apontamento Industrial</small>
                     </div>
                     <div style="text-align: right;">
-                        <strong>OP Nº: 2026-0842</strong><br>
-                        <span>Data: 27/08/2026</span>
+                        <strong id="op-card-id">OP Nº: ---</strong><br>
+                        <span id="op-card-date">Data: --/--/----</span>
                     </div>
                 </div>
 
                 <table style="color: black; border-color: #000; margin-bottom: 20px;">
                     <tr>
-                        <td style="border-color:#000;"><strong>Produto:</strong> Painel de Madeira Sob Medida</td>
-                        <td style="border-color:#000;"><strong>Quantidade:</strong> 150 Unidades</td>
+                        <td style="border-color:#000;"><strong>Produto:</strong> <span id="op-card-produto">---</span></td>
+                        <td style="border-color:#000;"><strong>Quantidade:</strong> <span id="op-card-qtd">---</span></td>
                     </tr>
                     <tr>
-                        <td style="border-color:#000;"><strong>Setor Atual:</strong> Corte & Usinagem</td>
-                        <td style="border-color:#000;"><strong>Prioridade:</strong> Alta</td>
+                        <td style="border-color:#000;"><strong>Programação:</strong> <span id="op-card-dia">---</span></td>
+                        <td style="border-color:#000;"><strong>Status Atual:</strong> <span id="op-card-status">---</span></td>
                     </tr>
                 </table>
 
                 <h4>Roteiro de Operações MES:</h4>
-                <ol>
-                    <li>Separação de matéria-prima no Almoxarifado.</li>
-                    <li>Corte e usinagem na Seccionadora.</li>
-                    <li>Furação CNC e Colagem de Borda.</li>
-                    <li>Inspeção de qualidade final e embalagem.</li>
+                <ol id="op-card-roteiro">
+                    <li>Separação e checagem de matérias-primas no Almoxarifado.</li>
+                    <li>Preparação de máquina e setup de linha.</li>
+                    <li>Execução do lote conforme especificação técnica.</li>
+                    <li>Inspeção de qualidade e liberação para embalagem/envio.</li>
                 </ol>
 
                 <div class="barcode-placeholder">
                     ||| | ||||| ||| |||| || ||||||| |||
-                    <div style="font-size: 12px; margin-top: 5px;">*OP20260842*</div>
+                    <div style="font-size: 12px; margin-top: 5px;" id="op-card-barcode">*OP-0000*</div>
                 </div>
             </div>
         </div>
@@ -258,7 +280,7 @@
 </div>
 
 <script>
-    // Dados Padrão dos Setores Produtivos
+    // Dados Iniciais dos Setores
     const defaultSetores = [
         { id: 'SEC-01', nome: 'Corte e Seccionadora', cap: '16', status: 'Ativo' },
         { id: 'CNC-02', nome: 'Usinagem CNC', cap: '24', status: 'Ativo' },
@@ -266,7 +288,7 @@
         { id: 'EMB-01', nome: 'Montagem e Embalagem', cap: '16', status: 'Ativo' }
     ];
 
-    // Dados Padrão da Programação Semanal
+    // Dados Iniciais da Programação Semanal
     const defaultProgramacao = [
         { dia: 'Segunda-feira', op: 'OP-1001', produto: 'Armário Embutido Master', qtd: '50', status: 'Finalizado' },
         { dia: 'Terça-feira', op: 'OP-1002', produto: 'Painel Ripado MDF', qtd: '120', status: 'Em Produção' },
@@ -275,7 +297,7 @@
         { dia: 'Sexta-feira', op: 'OP-1005', produto: 'Prateleira Suspensa', qtd: '200', status: 'Agendado' }
     ];
 
-    // Carregar Setores
+    // Renderizar Tabela de Setores Produtivos
     function renderSetores() {
         const data = JSON.parse(localStorage.getItem('mes_setores')) || defaultSetores;
         const tbody = document.getElementById('table-setores');
@@ -283,7 +305,7 @@
         data.forEach((item, index) => {
             tbody.innerHTML += `
                 <tr>
-                    <td>${item.id}</td>
+                    <td><input type="text" value="${item.id}" id="setor-id-${index}"></td>
                     <td><input type="text" value="${item.nome}" id="setor-nome-${index}"></td>
                     <td><input type="number" value="${item.cap}" id="setor-cap-${index}"></td>
                     <td>
@@ -298,11 +320,19 @@
         });
     }
 
+    // Adicionar Novo Setor
+    function addSetor() {
+        const data = JSON.parse(localStorage.getItem('mes_setores')) || defaultSetores;
+        data.push({ id: 'NOVO-01', nome: 'Novo Setor', cap: '8', status: 'Ativo' });
+        localStorage.setItem('mes_setores', JSON.stringify(data));
+        renderSetores();
+    }
+
     // Salvar Setores
     function saveSetores() {
         const data = JSON.parse(localStorage.getItem('mes_setores')) || defaultSetores;
         const updated = data.map((item, index) => ({
-            id: item.id,
+            id: document.getElementById(`setor-id-${index}`).value,
             nome: document.getElementById(`setor-nome-${index}`).value,
             cap: document.getElementById(`setor-cap-${index}`).value,
             status: document.getElementById(`setor-status-${index}`).value
@@ -311,7 +341,7 @@
         alert('Setores atualizados com sucesso no sistema MES!');
     }
 
-    // Carregar Programação Semanal
+    // Renderizar Programação Semanal
     function renderProgramacao() {
         const data = JSON.parse(localStorage.getItem('mes_programacao')) || defaultProgramacao;
         const tbody = document.getElementById('table-programacao');
@@ -319,7 +349,7 @@
         data.forEach((item, index) => {
             tbody.innerHTML += `
                 <tr>
-                    <td><strong>${item.dia}</strong></td>
+                    <td><input type="text" value="${item.dia}" id="prog-dia-${index}"></td>
                     <td><input type="text" value="${item.op}" id="prog-op-${index}"></td>
                     <td><input type="text" value="${item.produto}" id="prog-prod-${index}"></td>
                     <td><input type="number" value="${item.qtd}" id="prog-qtd-${index}"></td>
@@ -334,13 +364,14 @@
                 </tr>
             `;
         });
+        updateOPSelector(data);
     }
 
     // Salvar Programação
     function saveProgramacao() {
         const data = JSON.parse(localStorage.getItem('mes_programacao')) || defaultProgramacao;
         const updated = data.map((item, index) => ({
-            dia: item.dia,
+            dia: document.getElementById(`prog-dia-${index}`).value,
             op: document.getElementById(`prog-op-${index}`).value,
             produto: document.getElementById(`prog-prod-${index}`).value,
             qtd: document.getElementById(`prog-qtd-${index}`).value,
@@ -348,23 +379,55 @@
         }));
         localStorage.setItem('mes_programacao', JSON.stringify(updated));
         alert('Programação semanal atualizada com sucesso!');
+        updateOPSelector(updated);
     }
 
-    // Função de Impressão Garantida (Dispositivos Móveis e Desktop)
+    // Atualizar seletor de OPs para impressão
+    function updateOPSelector(data) {
+        const selector = document.getElementById('op-selector');
+        selector.innerHTML = '';
+        data.forEach((item) => {
+            selector.innerHTML += `<option value="${item.op}">${item.op} - ${item.produto}</option>`;
+        });
+        if(data.length > 0) loadOPDetails(data[0].op);
+    }
+
+    // Carregar dados dinâmicos na Ficha da OP selecionada
+    function loadOPDetails(opCode) {
+        const data = JSON.parse(localStorage.getItem('mes_programacao')) || defaultProgramacao;
+        const opData = data.find(item => item.op === opCode);
+
+        if (opData) {
+            document.getElementById('op-card-id').innerText = `OP Nº: ${opData.op}`;
+            document.getElementById('op-card-date').innerText = `Data: ${new Date().toLocaleDateString('pt-BR')}`;
+            document.getElementById('op-card-produto').innerText = opData.produto;
+            document.getElementById('op-card-qtd').innerText = `${opData.qtd} Unidades`;
+            document.getElementById('op-card-dia').innerText = opData.dia;
+            document.getElementById('op-card-status').innerText = opData.status;
+            document.getElementById('op-card-barcode').innerText = `*${opData.op}*`;
+        }
+    }
+
+    // Função de Impressão Direta
     function executarImpressao() {
         window.print();
     }
 
-    // Controle de Abas
-    function switchTab(tabId) {
+    // Alternar entre as abas
+    function switchTab(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
         document.getElementById(tabId).classList.add('active');
-        event.target.classList.add('active');
+        btn.classList.add('active');
+
+        if(tabId === 'op') {
+            const data = JSON.parse(localStorage.getItem('mes_programacao')) || defaultProgramacao;
+            updateOPSelector(data);
+        }
     }
 
-    // Inicialização
+    // Inicialização do sistema
     renderSetores();
     renderProgramacao();
 </script>
