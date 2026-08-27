@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+        <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -29,364 +30,485 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 antialiased">
 
-    <!-- BARRA NAVEGAÇÃO SUPERIOR -->
-    <nav class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-industry text-2xl text-indigo-400"></i>
-                <span class="font-bold text-xl tracking-wide">PWA Produção v2.1</span>
-            </div>
-            <div class="flex items-center space-x-2 text-xs bg-indigo-800 px-3 py-1 rounded-full border border-indigo-700">
-                <i class="fa-solid fa-barcode text-emerald-400"></i>
-                <span>Leitor Físico: <strong class="text-emerald-400">Pronto (USB/BT)</strong></span>
-            </div>
-        </div>
-        <!-- MENU DE ABAS -->
-        <div class="max-w-7xl mx-auto px-2 flex overflow-x-auto space-x-1 border-t border-indigo-800 text-xs md:text-sm">
-            <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-amber-400 text-amber-400 flex items-center gap-1.5"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-            <button onclick="switchTab('os')" id="btn-tab-os" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-clipboard-list"></i> Ordens de Serviço</button>
-            <button onclick="switchTab('linha')" id="btn-tab-linha" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-sliders"></i> Linha / Balanço</button>
-            <button onclick="switchTab('tarefas')" id="btn-tab-tarefas" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> Tarefas</button>
-            <button onclick="switchTab('colaboradores')" id="btn-tab-colaboradores" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-id-card"></i> Colaboradores</button>
-            <button onclick="switchTab('programacao')" id="btn-tab-programacao" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-calendar-week"></i> Prog. Semanal</button>
-            <button onclick="switchTab('setor')" id="btn-tab-setor" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-sitemap"></i> Setores</button>
-            <button onclick="switchTab('config')" id="btn-tab-config" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-gear"></i> Configurações</button>
-        </div>
-    </nav>
-
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto p-4 md:p-6">
-
-        <!-- 1. DASHBOARD & KPIS COMPACTOS -->
-        <section id="tab-dashboard" class="tab-content active space-y-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-indigo-600">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">OEE Global</p>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-indigo-900 mt-0.5" id="kpi-oee">84.5%</h3>
-                    <p class="text-[10px] text-emerald-600 font-semibold mt-0.5"><i class="fa-solid fa-arrow-up"></i> +2.1% meta</p>
+    <!-- TELA DE LOGIN OBRIGATÓRIA -->
+    <div id="screen-login" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-700">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 text-indigo-900 rounded-full mb-3">
+                    <i class="fa-solid fa-industry text-3xl"></i>
                 </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-emerald-500">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Disponibilidade</p>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mt-0.5" id="kpi-disp">92.0%</h3>
-                </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-amber-500">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Performance</p>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mt-0.5" id="kpi-perf">94.8%</h3>
-                </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Qualidade</p>
-                    <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mt-0.5" id="kpi-qual">96.9%</h3>
-                </div>
+                <h2 class="text-2xl font-bold text-slate-800">Sistema de Produção</h2>
+                <p class="text-xs text-slate-500 mt-1">Acesso Restrito ao Painel de Manufatura</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                    <h4 class="font-bold text-xs text-gray-700 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-chart-bar text-indigo-600"></i> Produção por Setor</h4>
-                    <div class="h-48 relative">
-                        <canvas id="chartSetores"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                    <h4 class="font-bold text-xs text-gray-700 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-user-clock text-indigo-600"></i> Consumo de Horas do Turno</h4>
-                    <div class="h-48 relative">
-                        <canvas id="chartHoras"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. ORDENS DE SERVIÇO (O.S.) -->
-        <section id="tab-os" class="tab-content space-y-4">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <form onsubmit="realizarLogin(event)" class="space-y-4">
                 <div>
-                    <h2 class="text-base font-bold text-gray-800">Ordens de Serviço em Aberto</h2>
-                    <p class="text-xs text-gray-500">Gerencie produtos, setores, metas e colaboradores alocados</p>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Usuário / Login</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" id="login-user" required placeholder="Digite seu usuário..." class="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
                 </div>
-                <button onclick="openModalOS()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-md text-xs transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus"></i> Nova Ordem de Serviço
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Senha</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="login-pass" required placeholder="••••••••" class="w-full pl-9 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs">
+                    <label class="flex items-center text-slate-600">
+                        <input type="checkbox" class="rounded border-slate-300 text-indigo-600 mr-2"> Lembrar acesso
+                    </label>
+                    <button type="button" onclick="openModalRecuperar()" class="text-indigo-600 font-semibold hover:underline">Esqueceu a senha?</button>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-lg">
+                    Entrar no Sistema
                 </button>
+            </form>
+
+            <div class="mt-4 pt-4 border-t text-center text-[11px] text-slate-400">
+                Credencial Padrão: <strong>admin</strong> / Senha: <strong>1234</strong>
             </div>
-
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase">
-                        <tr>
-                            <th class="p-2.5">Cód O.S.</th>
-                            <th class="p-2.5">Família</th>
-                            <th class="p-2.5">Produto</th>
-                            <th class="p-2.5">Setor</th>
-                            <th class="p-2.5">Meta (Unid)</th>
-                            <th class="p-2.5">Colaborador Alocado</th>
-                            <th class="p-2.5">Status</th>
-                            <th class="p-2.5 text-center">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbl-os-body" class="divide-y divide-gray-100">
-                        <!-- JS dinamico -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- 3. LINHA / BALANÇO -->
-        <section id="tab-linha" class="tab-content space-y-4">
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h3 class="font-bold text-gray-800 text-base mb-1">Balanço do Turno & Horas</h3>
-                <p class="text-xs text-gray-500 mb-4">Cálculo automático de metas do turno e consumo de horas alocadas pelas O.S.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
-                        <span class="text-[10px] font-bold text-indigo-700 uppercase">Meta Total do Turno</span>
-                        <div class="text-2xl font-black text-indigo-900 mt-1" id="linha-meta-turno">0 un</div>
-                        <p class="text-[10px] text-indigo-600 mt-0.5">Somatório das O.S. ativas</p>
-                    </div>
-                    <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
-                        <span class="text-[10px] font-bold text-amber-700 uppercase">Horas Planejadas / Consumidas</span>
-                        <div class="text-2xl font-black text-amber-900 mt-1" id="linha-consumo-horas">0.0 hrs</div>
-                        <p class="text-[10px] text-amber-600 mt-0.5">Calculado por colaboradores ativas</p>
-                    </div>
-                    <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
-                        <span class="text-[10px] font-bold text-emerald-700 uppercase">Eficiência da Linha</span>
-                        <div class="text-2xl font-black text-emerald-900 mt-1" id="linha-eficiencia">0.0%</div>
-                        <p class="text-[10px] text-emerald-600 mt-0.5">Ritmo de produção real vs. meta</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. TAREFAS -->
-        <section id="tab-tarefas" class="tab-content space-y-4">
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-3">
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-base">Acompanhamento e Apontamento de Tarefas</h3>
-                        <p class="text-xs text-gray-500">Tarefas evoluem automaticamente conforme bips de apontamento pelo scanner</p>
-                    </div>
-                    <button onclick="simularBipApontamento()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-3 py-1.5 rounded-md text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-barcode"></i> Simular Bip de Apontamento
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-gray-100 text-gray-600 uppercase">
-                            <tr>
-                                <th class="p-2.5">Cód Tarefa</th>
-                                <th class="p-2.5">Descrição da Atividade</th>
-                                <th class="p-2.5">O.S. Vinculada</th>
-                                <th class="p-2.5">Etapa / Status</th>
-                                <th class="p-2.5 text-center">Evolução Automática</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbl-tarefas-body" class="divide-y divide-gray-200">
-                            <!-- JS Dinamico -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. COLABORADORES & CRACHÁ -->
-        <section id="tab-colaboradores" class="tab-content space-y-4">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <!-- Coluna Leitor Crachá -->
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-3">
-                    <h3 class="font-bold text-gray-800 text-base flex items-center gap-2"><i class="fa-solid fa-id-badge text-indigo-600"></i> Leitura de Crachá</h3>
-                    <p class="text-xs text-gray-500">Escaneie o QR Code ou digite a matrícula para consultar o colaborador</p>
-
-                    <div class="flex gap-2">
-                        <input type="text" id="input-bip-colaborador" placeholder="Digite ou bipe a matrícula..." class="w-full text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
-                        <button onclick="buscarColaboradorBip()" class="bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-indigo-700">Buscar</button>
-                    </div>
-
-                    <div id="colaborador-card-resultado" class="hidden bg-indigo-50 p-3 rounded-lg border border-indigo-200 space-y-1.5 text-xs">
-                        <div class="flex justify-between items-center border-b border-indigo-200 pb-1.5">
-                            <span class="font-bold text-indigo-900 text-xs" id="res-colab-nome">Nome do Colaborador</span>
-                            <span class="bg-indigo-200 text-indigo-800 font-bold px-1.5 py-0.5 rounded text-[10px]" id="res-colab-mat">MAT: 000</span>
-                        </div>
-                        <p><strong>Função:</strong> <span id="res-colab-funcao">-</span></p>
-                        <p><strong>Alocado na O.S.:</strong> <span id="res-colab-os" class="font-bold text-indigo-700">-</span></p>
-                        <p><strong>Setor / Família:</strong> <span id="res-colab-setor">-</span> / <span id="res-colab-familia">-</span></p>
-                        <p><strong>Atividade Atual:</strong> <span id="res-colab-atividade">-</span></p>
-                        <div class="pt-1.5 border-t border-indigo-200 flex justify-between font-medium text-[11px]">
-                            <span>Tempo Corrido: <strong id="res-colab-tempo-corrido" class="text-amber-600">00:00</strong></span>
-                            <span>Tempo Padrão: <strong id="res-colab-tempo-padrao" class="text-emerald-600">00:00</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lista de Colaboradores -->
-                <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-bold text-gray-800 text-base">Colaboradores Cadastrados</h3>
-                        <button onclick="openModalColaborador()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5">
-                            <i class="fa-solid fa-user-plus"></i> Novo Colaborador
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-gray-50 text-gray-600 uppercase border-b border-gray-200">
-                                <tr>
-                                    <th class="p-2.5">Matrícula</th>
-                                    <th class="p-2.5">Nome</th>
-                                    <th class="p-2.5">Função</th>
-                                    <th class="p-2.5 text-center">Crachá (QR Code)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbl-colaboradores-body" class="divide-y divide-gray-100">
-                                <!-- JS dinamico -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. PROGRAMAÇÃO SEMANAL -->
-        <section id="tab-programacao" class="tab-content space-y-4">
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h3 class="font-bold text-gray-800 text-base mb-3">Programação de Produção Semanal</h3>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
-                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-                        <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Segunda-feira</span>
-                        <div class="space-y-1.5" id="prog-seg">
-                            <div class="bg-white p-2 rounded shadow-sm border border-gray-200">O.S. #OS-1001 - Sofa Sofisticatto</div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-                        <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Terça-feira</span>
-                        <div class="space-y-1.5" id="prog-ter">
-                            <div class="bg-white p-2 rounded shadow-sm border border-gray-200">O.S. #OS-1002 - Poltrona Mestre</div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-                        <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Quarta-feira</span>
-                        <div class="space-y-1.5" id="prog-qua"></div>
-                    </div>
-                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-                        <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Quinta-feira</span>
-                        <div class="space-y-1.5" id="prog-qui"></div>
-                    </div>
-                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-                        <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Sexta-feira</span>
-                        <div class="space-y-1.5" id="prog-sex"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. SETOR DE PRODUÇÃO -->
-        <section id="tab-setor" class="tab-content space-y-4">
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <div class="flex justify-between items-center mb-3">
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-base">Cadastro de Setores e Famílias</h3>
-                        <p class="text-xs text-gray-500">Cadastre e edite as famílias vinculadas aos setores produtivos</p>
-                    </div>
-                    <button onclick="openModalSetor()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5">
-                        <i class="fa-solid fa-plus"></i> Novo Setor
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-gray-50 text-gray-600 uppercase border-b border-gray-200">
-                            <tr>
-                                <th class="p-2.5">Nome do Setor</th>
-                                <th class="p-2.5">Família (Editável)</th>
-                                <th class="p-2.5 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbl-setores-body" class="divide-y divide-gray-100">
-                            <!-- JS dinamico -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. CONFIGURAÇÕES -->
-        <section id="tab-config" class="tab-content space-y-4">
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
-                <div>
-                    <h3 class="font-bold text-gray-800 text-base">Importação e Exportação de Dados</h3>
-                    <p class="text-xs text-gray-500">Exporte ou importe a base de dados do sistema</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-3 border border-gray-200 rounded-lg space-y-2 bg-gray-50">
-                        <h4 class="font-bold text-xs text-gray-700 flex items-center gap-1.5"><i class="fa-solid fa-file-export text-emerald-600"></i> Exportar Dados</h4>
-                        <p class="text-[11px] text-gray-600">Baixe os dados em JSON para backup ou uso no Excel.</p>
-                        <button onclick="exportarDados()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition">Exportar JSON</button>
-                    </div>
-
-                    <div class="p-3 border border-gray-200 rounded-lg space-y-2 bg-gray-50">
-                        <h4 class="font-bold text-xs text-gray-700 flex items-center gap-1.5"><i class="fa-solid fa-file-import text-indigo-600"></i> Importar Dados</h4>
-                        <p class="text-[11px] text-gray-600">Carregue um arquivo JSON de dados exportados anteriormente.</p>
-                        <input type="file" id="input-import-file" accept=".json" class="text-[11px] text-gray-500 block w-full">
-                        <button onclick="importarDados()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition">Importar</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ELEMENTO INVISÍVEL PARA GERAÇÃO DO CÓDIGO DE BARRAS DA O.S. -->
-    <div class="hidden">
-        <svg id="barcode-os-canvas"></svg>
+        </div>
     </div>
 
-    <!-- MODAL OS -->
-    <div id="modal-os" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 space-y-3">
-            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Cadastrar / Editar Ordem de Serviço</h3>
-            <form id="form-os" onsubmit="salvarOS(event)" class="space-y-2.5 text-xs">
+    <!-- MODAL ESQUECEU A SENHA -->
+    <div id="modal-recuperar" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-[110]">
+        <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 space-y-4">
+            <h3 class="font-bold text-base text-slate-800 border-b pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-key text-amber-500"></i> Recuperar Acesso
+            </h3>
+            <p class="text-xs text-slate-600">Informe seu E-mail ou Celular cadastrado para receber as instruções de redefinição de senha.</p>
+            
+            <form onsubmit="solicitarRecuperacao(event)" class="space-y-3 text-xs">
                 <div>
-                    <label class="block font-semibold text-gray-600">Código O.S.</label>
-                    <input type="text" id="os-codigo" placeholder="Ex: OS-1003" required class="w-full p-2 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600">Família (Editável)</label>
-                    <input type="text" id="os-familia" placeholder="Ex: Estofados, Poltronas" required class="w-full p-2 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600">Produto</label>
-                    <input type="text" id="os-produto" required class="w-full p-2 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600">Setor</label>
-                    <select id="os-setor" required class="w-full p-2 border rounded-lg bg-white">
-                        <!-- JS Dinamico -->
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600">Meta (Unidades)</label>
-                    <input type="number" id="os-meta" required class="w-full p-2 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600">Colaborador Alocado</label>
-                    <select id="os-colaborador" required class="w-full p-2 border rounded-lg bg-white">
-                        <!-- JS Dinamico -->
-                    </select>
+                    <label class="block font-semibold text-slate-700 mb-1">E-mail ou Celular (WhatsApp)</label>
+                    <input type="text" id="recuperar-contato" required placeholder="ex: usuario@empresa.com ou (11) 99999-9999" class="w-full p-2 border rounded-lg">
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t">
-                    <button type="button" onclick="closeModalOS()" class="px-3 py-1.5 border rounded-lg text-gray-600">Cancelar</button>
-                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Salvar O.S.</button>
+                    <button type="button" onclick="closeModalRecuperar()" class="px-3 py-1.5 border rounded-lg text-slate-600">Cancelar</button>
+                    <button type="submit" class="px-3 py-1.5 bg-indigo-900 text-white rounded-lg font-semibold">Enviar Código</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL CADASTRAR COLABORADOR -->
+    <!-- ESTRUTURA PRINCIPAL (APÓS LOGIN) -->
+    <div id="app-main-layout" class="hidden">
+        
+        <!-- BARRA NAVEGAÇÃO SUPERIOR -->
+        <nav class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-industry text-2xl text-indigo-400"></i>
+                    <span class="font-bold text-xl tracking-wide">PWA Produção v2.2</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-xs bg-indigo-800 px-3 py-1 rounded-full border border-indigo-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-circle text-amber-400"></i>
+                        <span id="header-user-name">Administrador</span>
+                    </div>
+                    <button onclick="realizarLogout()" class="text-xs bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 rounded-md transition flex items-center gap-1">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sair
+                    </button>
+                </div>
+            </div>
+            <!-- MENU DE ABAS -->
+            <div class="max-w-7xl mx-auto px-2 flex overflow-x-auto space-x-1 border-t border-indigo-800 text-xs md:text-sm">
+                <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-amber-400 text-amber-400 flex items-center gap-1.5"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+                <button onclick="switchTab('os')" id="btn-tab-os" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-clipboard-list"></i> Ordens de Produção</button>
+                <button onclick="switchTab('linha')" id="btn-tab-linha" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-sliders"></i> Linha / Balanço</button>
+                <button onclick="switchTab('tarefas')" id="btn-tab-tarefas" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> Tarefas</button>
+                <button onclick="switchTab('colaboradores')" id="btn-tab-colaboradores" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-id-card"></i> Colaboradores</button>
+                <button onclick="switchTab('programacao')" id="btn-tab-programacao" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-calendar-week"></i> Prog. Semanal</button>
+                <button onclick="switchTab('setor')" id="btn-tab-setor" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-sitemap"></i> Setores</button>
+                <button onclick="switchTab('config')" id="btn-tab-config" class="tab-btn px-3 py-2.5 font-medium border-b-2 border-transparent hover:text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-gear"></i> Configurações & Usuários</button>
+            </div>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="max-w-7xl mx-auto p-4 md:p-6">
+
+            <!-- 1. DASHBOARD & KPIS COMPACTOS -->
+            <section id="tab-dashboard" class="tab-content active space-y-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-indigo-600">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">OEE Global</p>
+                        <h3 class="text-xl md:text-2xl font-extrabold text-indigo-900 mt-0.5" id="kpi-oee">84.5%</h3>
+                        <p class="text-[10px] text-emerald-600 font-semibold mt-0.5"><i class="fa-solid fa-arrow-up"></i> +2.1% meta</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-emerald-500">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Disponibilidade</p>
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mt-0.5" id="kpi-disp">92.0%</h3>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-amber-500">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Performance</p>
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mt-0.5" id="kpi-perf">94.8%</h3>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Qualidade</p>
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mt-0.5" id="kpi-qual">96.9%</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-bold text-xs text-gray-700 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-chart-bar text-indigo-600"></i> Produção por Setor</h4>
+                        <div class="h-48 relative">
+                            <canvas id="chartSetores"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-bold text-xs text-gray-700 mb-2 flex items-center gap-1.5"><i class="fa-solid fa-user-clock text-indigo-600"></i> Consumo de Horas do Turno</h4>
+                        <div class="h-48 relative">
+                            <canvas id="chartHoras"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. ORDENS DE SERVIÇO (O.P.) -->
+            <section id="tab-os" class="tab-content space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div>
+                        <h2 class="text-base font-bold text-gray-800">Ordens de Produção (O.P.)</h2>
+                        <p class="text-xs text-gray-500">Gerencie lotes, matérias-primas e impressão da ficha técnica</p>
+                    </div>
+                    <button onclick="openModalOS()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-md text-xs transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> Nova Ordem de Produção
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-50 border-b border-gray-200 text-gray-600 uppercase">
+                            <tr>
+                                <th class="p-2.5">Cód O.P.</th>
+                                <th class="p-2.5">Família</th>
+                                <th class="p-2.5">Produto / Descrição</th>
+                                <th class="p-2.5">Produzir em</th>
+                                <th class="p-2.5">Qtd Empenhada</th>
+                                <th class="p-2.5">Responsável</th>
+                                <th class="p-2.5">Status</th>
+                                <th class="p-2.5 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-os-body" class="divide-y divide-gray-100">
+                            <!-- JS dinamico -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 3. LINHA / BALANÇO -->
+            <section id="tab-linha" class="tab-content space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="font-bold text-gray-800 text-base mb-1">Balanço do Turno & Horas</h3>
+                    <p class="text-xs text-gray-500 mb-4">Cálculo automático de metas do turno e consumo de horas alocadas</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+                            <span class="text-[10px] font-bold text-indigo-700 uppercase">Meta Total do Turno</span>
+                            <div class="text-2xl font-black text-indigo-900 mt-1" id="linha-meta-turno">0 un</div>
+                        </div>
+                        <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
+                            <span class="text-[10px] font-bold text-amber-700 uppercase">Horas Planejadas / Consumidas</span>
+                            <div class="text-2xl font-black text-amber-900 mt-1" id="linha-consumo-horas">0.0 hrs</div>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                            <span class="text-[10px] font-bold text-emerald-700 uppercase">Eficiência da Linha</span>
+                            <div class="text-2xl font-black text-emerald-900 mt-1" id="linha-eficiencia">0.0%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. TAREFAS -->
+            <section id="tab-tarefas" class="tab-content space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-3">
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-base">Acompanhamento de Tarefas</h3>
+                            <p class="text-xs text-gray-500">Apontamento em tempo real via leitor de código de barras</p>
+                        </div>
+                        <button onclick="simularBipApontamento()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-3 py-1.5 rounded-md text-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-barcode"></i> Simular Bip de Apontamento
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-100 text-gray-600 uppercase">
+                                <tr>
+                                    <th class="p-2.5">Cód Tarefa</th>
+                                    <th class="p-2.5">Descrição da Atividade</th>
+                                    <th class="p-2.5">O.P. Vinculada</th>
+                                    <th class="p-2.5">Status</th>
+                                    <th class="p-2.5 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-tarefas-body" class="divide-y divide-gray-200">
+                                <!-- JS Dinamico -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. COLABORADORES & CRACHÁ -->
+            <section id="tab-colaboradores" class="tab-content space-y-4">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-3">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2"><i class="fa-solid fa-id-badge text-indigo-600"></i> Leitura de Crachá</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-bip-colaborador" placeholder="Matrícula..." class="w-full text-xs p-2 border border-gray-300 rounded-lg">
+                            <button onclick="buscarColaboradorBip()" class="bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-semibold">Buscar</button>
+                        </div>
+
+                        <div id="colaborador-card-resultado" class="hidden bg-indigo-50 p-3 rounded-lg border border-indigo-200 space-y-1.5 text-xs">
+                            <div class="flex justify-between items-center border-b border-indigo-200 pb-1.5">
+                                <span class="font-bold text-indigo-900" id="res-colab-nome">-</span>
+                                <span class="bg-indigo-200 text-indigo-800 font-bold px-1.5 py-0.5 rounded text-[10px]" id="res-colab-mat">MAT: 000</span>
+                            </div>
+                            <p><strong>Função:</strong> <span id="res-colab-funcao">-</span></p>
+                            <p><strong>Alocado na O.P.:</strong> <span id="res-colab-os" class="font-bold text-indigo-700">-</span></p>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-gray-800 text-base">Colaboradores Cadastrados</h3>
+                            <button onclick="openModalColaborador()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-plus"></i> Novo Colaborador
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-gray-50 text-gray-600 uppercase border-b border-gray-200">
+                                    <tr>
+                                        <th class="p-2.5">Matrícula</th>
+                                        <th class="p-2.5">Nome</th>
+                                        <th class="p-2.5">Função</th>
+                                        <th class="p-2.5 text-center">Crachá</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-colaboradores-body" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. PROGRAMAÇÃO SEMANAL -->
+            <section id="tab-programacao" class="tab-content space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="font-bold text-gray-800 text-base mb-3">Programação Semanal</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+                        <div class="bg-gray-50 p-2.5 rounded-lg border">
+                            <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Segunda-feira</span>
+                            <div class="space-y-1.5"><div class="bg-white p-2 rounded shadow-sm border">OP 102.1.1 - CREME DE AMENDOIM</div></div>
+                        </div>
+                        <div class="bg-gray-50 p-2.5 rounded-lg border">
+                            <span class="font-bold text-gray-700 block border-b pb-1 mb-2">Terça-feira</span>
+                            <div class="space-y-1.5"><div class="bg-white p-2 rounded shadow-sm border">OP 102.1.2 - PASTA AMENDOIM</div></div>
+                        </div>
+                        <div class="bg-gray-50 p-2.5 rounded-lg border"><span class="font-bold text-gray-700 block border-b pb-1 mb-2">Quarta-feira</span></div>
+                        <div class="bg-gray-50 p-2.5 rounded-lg border"><span class="font-bold text-gray-700 block border-b pb-1 mb-2">Quinta-feira</span></div>
+                        <div class="bg-gray-50 p-2.5 rounded-lg border"><span class="font-bold text-gray-700 block border-b pb-1 mb-2">Sexta-feira</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. SETOR DE PRODUÇÃO -->
+            <section id="tab-setor" class="tab-content space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-gray-800 text-base">Setores Produtivos</h3>
+                        <button onclick="openModalSetor()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-md text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Novo Setor
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-gray-50 text-gray-600 uppercase border-b border-gray-200">
+                                <tr>
+                                    <th class="p-2.5">Setor</th>
+                                    <th class="p-2.5">Família</th>
+                                    <th class="p-2.5 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-setores-body" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. CONFIGURAÇÕES & GESTÃO DE USUÁRIOS -->
+            <section id="tab-config" class="tab-content space-y-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    
+                    <!-- GESTÃO DE USUÁRIOS (REQUISITADO) -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-base">Gerenciamento de Usuários</h3>
+                                <p class="text-xs text-gray-500">Cadastre novos usuários e altere senhas de acesso</p>
+                            </div>
+                            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">Área Administrador</span>
+                        </div>
+
+                        <!-- Formulário de Usuário -->
+                        <form onsubmit="salvarNovoUsuario(event)" class="bg-gray-50 p-3 rounded-lg border space-y-2 text-xs">
+                            <h4 class="font-bold text-slate-700">Adicionar / Editar Usuário</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold">Login / Usuário</label>
+                                    <input type="text" id="user-login" required placeholder="ex: joao.silva" class="w-full p-1.5 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold">Nome Completo</label>
+                                    <input type="text" id="user-nome" required placeholder="João Silva" class="w-full p-1.5 border rounded">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold">Senha</label>
+                                    <input type="password" id="user-senha" required placeholder="••••••••" class="w-full p-1.5 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold">Perfil de Acesso</label>
+                                    <select id="user-perfil" class="w-full p-1.5 border rounded bg-white">
+                                        <option value="Administrador">Administrador</option>
+                                        <option value="Operador">Operador</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded text-xs transition">
+                                <i class="fa-solid fa-user-plus"></i> Salvar Usuário
+                            </button>
+                        </form>
+
+                        <!-- Tabela de Usuários Cadastrados -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border border-gray-200 rounded">
+                                <thead class="bg-gray-100 uppercase text-gray-600">
+                                    <tr>
+                                        <th class="p-2">Usuário</th>
+                                        <th class="p-2">Nome</th>
+                                        <th class="p-2">Perfil</th>
+                                        <th class="p-2 text-center">Trocar Senha</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbl-usuarios-body" class="divide-y divide-gray-200">
+                                    <!-- JS Dinamico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BACKUP E DADOS -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-base">Importação e Exportação</h3>
+                            <p class="text-xs text-gray-500">Backup em JSON compatível com planilhas</p>
+                        </div>
+
+                        <div class="p-3 border rounded-lg space-y-2 bg-gray-50">
+                            <h4 class="font-bold text-xs text-gray-700 flex items-center gap-1.5"><i class="fa-solid fa-file-export text-emerald-600"></i> Exportar Dados</h4>
+                            <button onclick="exportarDados()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition">Exportar JSON</button>
+                        </div>
+
+                        <div class="p-3 border rounded-lg space-y-2 bg-gray-50">
+                            <h4 class="font-bold text-xs text-gray-700 flex items-center gap-1.5"><i class="fa-solid fa-file-import text-indigo-600"></i> Importar Dados</h4>
+                            <input type="file" id="input-import-file" accept=".json" class="text-[11px] text-gray-500 block w-full">
+                            <button onclick="importarDados()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition">Importar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- CANVAS OCULTO PARA CÓDIGO DE BARRAS -->
+    <div class="hidden">
+        <svg id="barcode-os-canvas"></svg>
+    </div>
+
+    <!-- MODAL OP -->
+    <div id="modal-os" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 space-y-3">
+            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Cadastrar Ordem de Produção (O.P.)</h3>
+            <form id="form-os" onsubmit="salvarOS(event)" class="space-y-2 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-600">Código O.P.</label>
+                    <input type="text" id="os-codigo" value="OP 102.1.1" required class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600">Produto</label>
+                    <input type="text" id="os-produto" value="CR.001.0010 - CREME DE AMENDOIM TST 2KG" required class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600">Produzir em (Unidade/Filial)</label>
+                    <input type="text" id="os-produzirem" value="04 - Produção FILIAL" required class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600">Entregar em</label>
+                    <input type="text" id="os-entregarem" value="05 - AG" required class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-semibold text-gray-600">Qtd Empenhada</label>
+                        <input type="number" id="os-empenhada" value="2" required class="w-full p-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-gray-600">Responsável</label>
+                        <select id="os-colaborador" required class="w-full p-2 border rounded-lg bg-white"></select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t">
+                    <button type="button" onclick="closeModalOS()" class="px-3 py-1.5 border rounded-lg text-gray-600">Cancelar</button>
+                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Salvar O.P.</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL ALTERAR SENHA -->
+    <div id="modal-trocar-senha" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 space-y-3">
+            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Alterar Senha de Usuário</h3>
+            <form onsubmit="confirmarTrocaSenha(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="troca-user-login">
+                <div>
+                    <label class="block font-semibold text-gray-600">Usuário:</label>
+                    <span id="troca-user-display" class="font-bold text-indigo-900 block mt-0.5">admin</span>
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600">Nova Senha</label>
+                    <input type="password" id="troca-nova-senha" required placeholder="••••••••" class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t">
+                    <button type="button" onclick="closeModalTrocarSenha()" class="px-3 py-1.5 border rounded-lg text-gray-600">Cancelar</button>
+                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Atualizar Senha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL COLABORADOR -->
     <div id="modal-colaborador" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 space-y-3">
-            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Cadastrar Novo Colaborador</h3>
+            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Cadastrar Colaborador</h3>
             <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="space-y-2.5 text-xs">
                 <div>
                     <label class="block font-semibold text-gray-600">Matrícula</label>
-                    <input type="text" id="colab-mat" placeholder="Ex: 1003" required class="w-full p-2 border rounded-lg">
+                    <input type="text" id="colab-mat" required class="w-full p-2 border rounded-lg">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-600">Nome Completo</label>
@@ -394,42 +516,38 @@
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-600">Função</label>
-                    <input type="text" id="colab-funcao" placeholder="Ex: Tapeceiro, Costureiro" required class="w-full p-2 border rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600">Atividade Atual</label>
-                    <input type="text" id="colab-atividade" placeholder="Ex: Grampeamento, Montagem" class="w-full p-2 border rounded-lg">
+                    <input type="text" id="colab-funcao" required class="w-full p-2 border rounded-lg">
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t">
                     <button type="button" onclick="closeModalColaborador()" class="px-3 py-1.5 border rounded-lg text-gray-600">Cancelar</button>
-                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Salvar Colaborador</button>
+                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL CADASTRAR SETOR -->
+    <!-- MODAL SETOR -->
     <div id="modal-setor" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 space-y-3">
-            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Cadastrar Novo Setor</h3>
+            <h3 class="font-bold text-base text-gray-800 border-b pb-2">Cadastrar Setor</h3>
             <form id="form-setor" onsubmit="salvarSetor(event)" class="space-y-2.5 text-xs">
                 <div>
                     <label class="block font-semibold text-gray-600">Nome do Setor</label>
-                    <input type="text" id="setor-nome" placeholder="Ex: Pintura, Costura" required class="w-full p-2 border rounded-lg">
+                    <input type="text" id="setor-nome" required class="w-full p-2 border rounded-lg">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-600">Família Padrão</label>
-                    <input type="text" id="setor-familia" placeholder="Ex: Estofados, Madeira" required class="w-full p-2 border rounded-lg">
+                    <input type="text" id="setor-familia" required class="w-full p-2 border rounded-lg">
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t">
                     <button type="button" onclick="closeModalSetor()" class="px-3 py-1.5 border rounded-lg text-gray-600">Cancelar</button>
-                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Salvar Setor</button>
+                    <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL IMPRESSÃO CRACHÁ -->
+    <!-- MODAL CRACHÁ -->
     <div id="modal-cracha" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 text-center space-y-3">
             <h3 class="font-bold text-gray-800 border-b pb-2 text-sm">Crachá de Identificação</h3>
@@ -447,37 +565,355 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT PRINCIPAL DO APP -->
+    <!-- JAVASCRIPT PRINCIPAL DO SISTEMA -->
     <script>
-        // ESTADO GLOBAL DO APLICATIVO
+        // ESTADO GLOBAL
         let appData = {
+            usuarios: [
+                { login: 'admin', nome: 'Administrador Principal', senha: '1234', perfil: 'Administrador' }
+            ],
+            usuarioLogado: null,
             osList: [
-                { id: 'OS-1001', familia: 'Estofados', produto: 'Sofá 3 Lugares Luxo', setor: 'Tapeçaria', meta: 20, colaborador: 'Carlos Silva', status: 'Em Andamento' },
-                { id: 'OS-1002', familia: 'Mesas', produto: 'Mesa de Jantar 8 Lugares', setor: 'Marcenaria', meta: 10, colaborador: 'João Souza', status: 'Pendente' }
+                { 
+                    id: 'OP 102.1.1', 
+                    familia: 'ALIMENTÍCIO', 
+                    produto: 'CR.001.0010 - CREME DE AMENDOIM TST 2KG - COM LOTE', 
+                    produzirEm: '04 - Produção FILIAL\n0000000001 - LOTE PADRÃO', 
+                    entregarEm: '05 - AG\n0000000001 - LOTE PADRÃO',
+                    abertura: '12/12/2019 12:44:49',
+                    iniciada: '12/12/2019 12:45:23',
+                    previsao: '',
+                    lote: '',
+                    leadTime: '0,000',
+                    qtdEstoque: '331.483',
+                    meta: 2, 
+                    colaborador: 'Carlos Silva', 
+                    status: 'Em Andamento',
+                    itens: [
+                        { cod: '227', desc: 'POTE PRETO - 1,005 KG', emp: '2', rej: '0', dev: '0', orig: '04', sub: '', un: 'un' },
+                        { cod: '228', desc: 'TAMPA PRETA - 1,005 KG', emp: '2', rej: '0', dev: '0', orig: '04', sub: '', un: 'un' },
+                        { cod: '255', desc: 'CX PASTA - 8X1,005KG', emp: '0', rej: '0', dev: '0', orig: '04', sub: '', un: 'un' },
+                        { cod: '390', desc: 'FITA ADESIVA', emp: '1', rej: '0', dev: '0', orig: '04', sub: '', un: 'm' },
+                        { cod: '98', desc: 'AMENDOIM', emp: '2', rej: '0', dev: '0', orig: '04', sub: '0000000 001', un: 'KG' }
+                    ]
+                }
             ],
             colaboradores: [
-                { mat: '1001', nome: 'Carlos Silva', funcao: 'Tapeceiro', atividade: 'Grampeamento de Estrutura', os: 'OS-1001', tempoPadrao: '02:00', tempoCorrido: '01:15' },
-                { mat: '1002', nome: 'João Souza', funcao: 'Marceneiro', atividade: 'Corte de MDF', os: 'OS-1002', tempoPadrao: '01:30', tempoCorrido: '00:45' }
+                { mat: '1001', nome: 'Carlos Silva', funcao: 'Operador de Produção', atividade: 'Processamento', os: 'OP 102.1.1' }
             ],
             setores: [
-                { nome: 'Tapeçaria', familia: 'Estofados' },
-                { nome: 'Marcenaria', familia: 'Móveis de Madeira' }
+                { nome: 'Linha de Processamento', familia: 'Alimentício' }
             ],
             tarefas: [
-                { id: 'TAR-01', desc: 'Montagem de caixa e espuma', os: 'OS-1001', status: 'Em Andamento' },
-                { id: 'TAR-02', desc: 'Acabamento em Couro', os: 'OS-1001', status: 'Pendente' }
+                { id: 'TAR-01', desc: 'Pesagem de Insumos', os: 'OP 102.1.1', status: 'Em Andamento' }
             ]
         };
 
-        // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', () => {
             carregarStorage();
-            renderAll();
-            initCharts();
-            setupExternalBarcodeScanner();
+            verificarSessao();
         });
 
-        // NAVEGAÇÃO ENTRE ABAS
+        // AUTENTICAÇÃO E LOGIN
+        function realizarLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+
+            const user = appData.usuarios.find(x => x.login === u && x.senha === p);
+            if (user) {
+                appData.usuarioLogado = user;
+                document.getElementById('screen-login').classList.add('hidden');
+                document.getElementById('app-main-layout').classList.remove('hidden');
+                document.getElementById('header-user-name').innerText = user.nome;
+                renderAll();
+                initCharts();
+            } else {
+                alert('Usuário ou senha incorretos!');
+            }
+        }
+
+        function realizarLogout() {
+            appData.usuarioLogado = null;
+            document.getElementById('screen-login').classList.remove('hidden');
+            document.getElementById('app-main-layout').classList.add('hidden');
+        }
+
+        function verificarSessao() {
+            if (!appData.usuarioLogado) {
+                document.getElementById('screen-login').classList.remove('hidden');
+                document.getElementById('app-main-layout').classList.add('hidden');
+            }
+        }
+
+        // ESQUECEU A SENHA
+        function openModalRecuperar() {
+            document.getElementById('modal-recuperar').classList.remove('hidden');
+            document.getElementById('modal-recuperar').classList.add('flex');
+        }
+
+        function closeModalRecuperar() {
+            document.getElementById('modal-recuperar').classList.add('hidden');
+            document.getElementById('modal-recuperar').classList.remove('flex');
+        }
+
+        function solicitarRecuperacao(e) {
+            e.preventDefault();
+            const contato = document.getElementById('recuperar-contato').value.trim();
+            alert(`Instruções e código de recuperação de senha enviados para: ${contato}`);
+            closeModalRecuperar();
+        }
+
+        // GESTÃO DE USUÁRIOS (CONFIGURAÇÕES)
+        function salvarNovoUsuario(e) {
+            e.preventDefault();
+            const login = document.getElementById('user-login').value.trim();
+            const nome = document.getElementById('user-nome').value.trim();
+            const senha = document.getElementById('user-senha').value.trim();
+            const perfil = document.getElementById('user-perfil').value;
+
+            const existente = appData.usuarios.find(u => u.login === login);
+            if (existente) {
+                existente.nome = nome;
+                existente.senha = senha;
+                existente.perfil = perfil;
+            } else {
+                appData.usuarios.push({ login, nome, senha, perfil });
+            }
+
+            alert('Usuário salvo com sucesso!');
+            document.getElementById('user-login').value = '';
+            document.getElementById('user-nome').value = '';
+            document.getElementById('user-senha').value = '';
+            renderUsuarios();
+            salvarStorage();
+        }
+
+        function renderUsuarios() {
+            const tbody = document.getElementById('tbl-usuarios-body');
+            tbody.innerHTML = appData.usuarios.map(u => `
+                <tr class="hover:bg-gray-50">
+                    <td class="p-2 font-bold text-indigo-900">${u.login}</td>
+                    <td class="p-2">${u.nome}</td>
+                    <td class="p-2"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${u.perfil === 'Administrador' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-700'}">${u.perfil}</span></td>
+                    <td class="p-2 text-center">
+                        <button onclick="abrirTrocarSenhaModal('${u.login}')" class="bg-indigo-100 text-indigo-800 hover:bg-indigo-200 px-2 py-0.5 rounded text-[11px] font-semibold">
+                            <i class="fa-solid fa-key"></i> Trocar Senha
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function abrirTrocarSenhaModal(login) {
+            const u = appData.usuarios.find(x => x.login === login);
+            if (!u) return;
+            document.getElementById('troca-user-login').value = u.login;
+            document.getElementById('troca-user-display').innerText = `${u.nome} (${u.login})`;
+            document.getElementById('modal-trocar-senha').classList.remove('hidden');
+            document.getElementById('modal-trocar-senha').classList.add('flex');
+        }
+
+        function closeModalTrocarSenha() {
+            document.getElementById('modal-trocar-senha').classList.add('hidden');
+            document.getElementById('modal-trocar-senha').classList.remove('flex');
+        }
+
+        function confirmarTrocaSenha(e) {
+            e.preventDefault();
+            const login = document.getElementById('troca-user-login').value;
+            const novaSenha = document.getElementById('troca-nova-senha').value.trim();
+
+            const u = appData.usuarios.find(x => x.login === login);
+            if (u) {
+                u.senha = novaSenha;
+                alert(`Senha do usuário ${login} atualizada com sucesso!`);
+                closeModalTrocarSenha();
+                renderUsuarios();
+                salvarStorage();
+            }
+        }
+
+        // EMISSÃO DA IMPRESSÃO DA ORDEM DE PRODUÇÃO (FIEL À IMAGEM)
+        function gerarPDFElaborado(osId) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+            const os = appData.osList.find(o => o.id === osId) || appData.osList[0];
+
+            // Gera código de barras
+            JsBarcode("#barcode-os-canvas", os.id, { format: "CODE128", width: 2, height: 40, displayValue: false });
+            const svgElement = document.getElementById('barcode-os-canvas');
+            const xml = new XMLSerializer().serializeToString(svgElement);
+            const barcodeDataUrl = 'data:image/svg+xml;base64,' + btoa(xml);
+
+            // DESENHO DAS LINHAS E GRADES (MODELO DA FOTO)
+            doc.setDrawColor(100, 100, 100);
+            doc.setLineWidth(0.3);
+
+            // Cabeçalho Principal (Box Topo)
+            doc.rect(10, 10, 190, 32);
+
+            // Divisórias do Cabeçalho
+            doc.line(45, 10, 45, 42); // Divisória do ícone/título
+            doc.line(45, 23, 190, 23); // Linha horizontal do meio
+            doc.line(120, 10, 120, 23); // Divisória Produzir / Entregar
+            doc.line(180, 10, 180, 23); // Divisória pág
+
+            // Texto Título e Ícone Falso
+            doc.setFontSize(10); doc.setFont("helvetica", "bold");
+            doc.text("Ordem de", 18, 17);
+            doc.text("Produção", 18, 22);
+            doc.setFontSize(8);
+            doc.text(os.id, 18, 27);
+
+            // Barcode no quadro superior esquerdo
+            doc.addImage(barcodeDataUrl, 'SVG', 12, 29, 30, 11);
+
+            // Produzir em / Entregar em / Pagina
+            doc.setFontSize(7); doc.setFont("helvetica", "normal");
+            doc.text("Produzir em:", 47, 13);
+            doc.setFont("helvetica", "bold");
+            doc.text("04 - Produção FILIAL", 47, 17);
+            doc.text("0000000001 - LOTE PADRÃO", 47, 21);
+
+            doc.setFont("helvetica", "normal");
+            doc.text("Entregar em:", 122, 13);
+            doc.setFont("helvetica", "bold");
+            doc.text("05 - AG", 122, 17);
+            doc.text("0000000001 - LOTE PADRÃO", 122, 21);
+
+            doc.setFont("helvetica", "normal");
+            doc.text("pág.", 182, 13);
+            doc.setFont("helvetica", "bold");
+            doc.text("1/1", 182, 18);
+
+            // Segunda linha do cabeçalho (Iniciada em, Previsão, Abertura, Lote, Lead Time, Qtd Estoque, Qtd Empenhada)
+            doc.line(70, 23, 70, 42);
+            doc.line(95, 23, 95, 42);
+            doc.line(115, 23, 115, 42);
+            doc.line(138, 23, 138, 42);
+            doc.line(162, 23, 162, 42);
+            doc.line(178, 23, 178, 42);
+
+            doc.setFontSize(6); doc.setFont("helvetica", "normal");
+            doc.text("Iniciada em:", 47, 26);
+            doc.setFont("helvetica", "bold");
+            doc.text("12/12/2019", 47, 32);
+            doc.text("12:45:23", 47, 36);
+
+            doc.setFont("helvetica", "normal"); doc.text("Previsão:", 72, 26);
+
+            doc.text("Abertura em:", 97, 26);
+            doc.setFont("helvetica", "bold");
+            doc.text("12/12/2019", 97, 32);
+            doc.text("12:44:49", 97, 36);
+
+            doc.setFont("helvetica", "normal"); doc.text("Lote:", 117, 26);
+            doc.text("Lead Time:", 140, 26); doc.text("0,000", 140, 32);
+            doc.text("Qtde em Estoque:", 164, 26); doc.text("331.483", 164, 32);
+            doc.text("Qtde Empenhada:", 180, 26); doc.setFont("helvetica", "bold"); doc.text(`${os.meta} un`, 180, 32);
+
+            // BANDA CINZA PRODUTO
+            doc.setFillColor(100, 100, 100);
+            doc.rect(10, 44, 190, 5, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(9); doc.setFont("helvetica", "bold");
+            doc.text("PRODUTO", 95, 48, { align: 'center' });
+
+            // NOME DO PRODUTO
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(8);
+            doc.text(os.produto, 10, 53);
+
+            // TABELA DE MATÉRIAS-PRIMAS / COMPONENTES
+            doc.rect(10, 55, 190, 45); // Quadro da tabela
+            doc.setFillColor(230, 230, 230);
+            doc.rect(10, 55, 190, 5, 'F'); // Cabeçalho cinza claro da tabela
+
+            doc.setFontSize(6.5); doc.setFont("helvetica", "normal");
+            doc.text("Produto", 12, 59);
+            doc.text("Descrição", 45, 59);
+            doc.text("Empenhada", 100, 59);
+            doc.text("Rejeitada", 120, 59);
+            doc.text("Devolvida", 137, 59);
+            doc.text("UP Origem", 155, 59);
+            doc.text("SubUP", 180, 59);
+            doc.text("Un", 195, 59);
+
+            let posY = 64;
+            os.itens.forEach(item => {
+                doc.text(item.cod, 12, posY);
+                doc.text(item.desc, 45, posY);
+                doc.text(item.emp, 102, posY);
+                doc.text(item.rej, 122, posY);
+                doc.text(item.dev, 139, posY);
+                doc.text(item.orig, 157, posY);
+                doc.text(item.sub, 180, posY);
+                doc.text(item.un, 195, posY);
+                posY += 5;
+            });
+
+            // Detalhamento da operação
+            doc.setFillColor(230, 230, 230);
+            doc.rect(10, 102, 35, 4, 'F');
+            doc.setFontSize(6); doc.setFont("helvetica", "normal");
+            doc.text("Detalhamento da operação:", 11, 105);
+
+            // BANDA CINZA NOTIFICAÇÃO
+            doc.setFillColor(100, 100, 100);
+            doc.rect(10, 120, 190, 5, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(9); doc.setFont("helvetica", "bold");
+            doc.text("NOTIFICAÇÃO:", 12, 124);
+
+            // OBSERVAÇÃO E LINHAS DE APONTAMENTO
+            doc.setTextColor(0, 0, 0);
+            doc.setFillColor(230, 230, 230);
+            doc.rect(10, 127, 25, 4, 'F');
+            doc.setFontSize(6.5);
+            doc.text("Observação:", 11, 130);
+
+            // Pauta de observação
+            for(let l = 135; l <= 155; l += 5) {
+                doc.line(10, l, 200, l);
+            }
+
+            // TABELA DE APONTAMENTO DIÁRIO (RODAPÉ)
+            doc.setFillColor(100, 100, 100);
+            doc.rect(10, 160, 190, 6, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(8); doc.setFont("helvetica", "bold");
+            doc.text("DATA", 25, 164);
+            doc.text("Qtd. Produzida", 55, 164);
+            doc.text("Responsável", 115, 164);
+            doc.text("Hora Início", 155, 164);
+            doc.text("Hora Fim", 182, 164);
+
+            // Linhas de Apontamento
+            doc.rect(10, 166, 190, 30);
+            doc.line(35, 166, 35, 196);
+            doc.line(80, 166, 80, 196);
+            doc.line(145, 166, 145, 196);
+            doc.line(175, 166, 175, 196);
+
+            for(let a = 174; a < 196; a += 7.5) {
+                doc.line(10, a, 200, a);
+            }
+
+            // Data Fechamento e Assinatura
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(7); doc.setFont("helvetica", "normal");
+            doc.text("Data Fechamento", 10, 205);
+            doc.line(32, 206, 65, 206);
+            doc.text("12/12/2019", 35, 205);
+
+            doc.line(110, 206, 170, 206);
+            doc.text("Responsável", 132, 210);
+
+            doc.save(`Ordem_de_Producao_${os.id}.pdf`);
+        }
+
+        // RENDERIZAÇÃO GERAL
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -493,12 +929,12 @@
             }
         }
 
-        // RENDERIZAÇÃO GERAL
         function renderAll() {
             renderOS();
             renderColaboradores();
             renderSetores();
             renderTarefas();
+            renderUsuarios();
             calcularBalancoLinha();
             salvarStorage();
         }
@@ -510,13 +946,13 @@
                     <td class="p-2.5 font-bold text-indigo-900">${os.id}</td>
                     <td class="p-2.5"><span class="bg-gray-100 px-2 py-0.5 rounded text-[11px] border">${os.familia}</span></td>
                     <td class="p-2.5">${os.produto}</td>
-                    <td class="p-2.5">${os.setor}</td>
+                    <td class="p-2.5">${os.produzirem || '04 - Produção FILIAL'}</td>
                     <td class="p-2.5 font-semibold">${os.meta} un</td>
                     <td class="p-2.5">${os.colaborador}</td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${os.status === 'Em Andamento' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-800'}">${os.status}</span></td>
                     <td class="p-2.5 text-center">
-                        <button onclick="gerarPDFElaborado('${os.id}')" class="text-xs bg-indigo-100 text-indigo-800 font-bold px-2.5 py-1 rounded hover:bg-indigo-200" title="Imprimir O.S. Completa">
-                            <i class="fa-solid fa-file-pdf"></i> Imprimir O.S.
+                        <button onclick="gerarPDFElaborado('${os.id}')" class="text-xs bg-indigo-900 text-white font-bold px-2.5 py-1 rounded hover:bg-indigo-800 shadow-sm" title="Imprimir Ordem de Produção Fiel">
+                            <i class="fa-solid fa-print"></i> Imprimir O.P.
                         </button>
                     </td>
                 </tr>
@@ -531,7 +967,7 @@
                     <td class="p-2.5 font-semibold">${col.nome}</td>
                     <td class="p-2.5">${col.funcao}</td>
                     <td class="p-2.5 text-center">
-                        <button onclick="abrirCrachaModal('${col.mat}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 mx-auto">
+                        <button onclick="abrirCrachaModal('${col.mat}')" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-2 py-0.5 rounded text-xs font-semibold">
                             <i class="fa-solid fa-qrcode"></i> Ver Crachá
                         </button>
                     </td>
@@ -544,8 +980,8 @@
             tbody.innerHTML = appData.setores.map(set => `
                 <tr class="hover:bg-gray-50">
                     <td class="p-2.5 font-semibold">${set.nome}</td>
-                    <td class="p-2.5"><input type="text" value="${set.familia}" onchange="atualizarFamiliaSetor('${set.nome}', this.value)" class="p-1 border rounded text-xs w-full bg-white"></td>
-                    <td class="p-2.5 text-center text-xs text-gray-400">Editável</td>
+                    <td class="p-2.5">${set.familia}</td>
+                    <td class="p-2.5 text-center text-xs text-gray-400">Ativo</td>
                 </tr>
             `).join('');
         }
@@ -557,13 +993,9 @@
                     <td class="p-2.5 font-bold text-gray-700">${tar.id}</td>
                     <td class="p-2.5">${tar.desc}</td>
                     <td class="p-2.5 font-semibold text-indigo-600">${tar.os}</td>
-                    <td class="p-2.5">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${tar.status === 'Concluído' ? 'bg-emerald-100 text-emerald-800' : tar.status === 'Em Andamento' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-700'}">${tar.status}</span>
-                    </td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${tar.status === 'Concluído' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${tar.status}</span></td>
                     <td class="p-2.5 text-center">
-                        <button onclick="evoluirTarefa('${tar.id}')" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded hover:bg-indigo-100 font-semibold">
-                            Evoluir Etapa
-                        </button>
+                        <button onclick="evoluirTarefa('${tar.id}')" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded hover:bg-indigo-100 font-semibold">Evoluir</button>
                     </td>
                 </tr>
             `).join('');
@@ -575,250 +1007,92 @@
 
             document.getElementById('linha-meta-turno').innerText = `${metaTotal} un`;
             document.getElementById('linha-consumo-horas').innerText = `${horasConsumidas} hrs`;
-            document.getElementById('linha-eficiencia').innerText = `88.5%`;
+            document.getElementById('linha-eficiencia').innerText = `91.2%`;
         }
 
-        // CADASTRO E GERENCIAMENTO DE COLABORADORES
-        function openModalColaborador() {
-            document.getElementById('modal-colaborador').classList.remove('hidden');
-            document.getElementById('modal-colaborador').classList.add('flex');
-        }
-
-        function closeModalColaborador() {
-            document.getElementById('modal-colaborador').classList.add('hidden');
-            document.getElementById('modal-colaborador').classList.remove('flex');
-        }
-
-        function salvarColaborador(e) {
-            e.preventDefault();
-            const novoColab = {
-                mat: document.getElementById('colab-mat').value.trim(),
-                nome: document.getElementById('colab-nome').value.trim(),
-                funcao: document.getElementById('colab-funcao').value.trim(),
-                atividade: document.getElementById('colab-atividade').value.trim() || 'Geral',
-                os: '',
-                tempoPadrao: '02:00',
-                tempoCorrido: '00:00'
-            };
-
-            appData.colaboradores.push(novoColab);
-            closeModalColaborador();
-            document.getElementById('form-colaborador').reset();
-            renderAll();
-        }
-
-        // CADASTRO E GERENCIAMENTO DE SETORES
-        function openModalSetor() {
-            document.getElementById('modal-setor').classList.remove('hidden');
-            document.getElementById('modal-setor').classList.add('flex');
-        }
-
-        function closeModalSetor() {
-            document.getElementById('modal-setor').classList.add('hidden');
-            document.getElementById('modal-setor').classList.remove('flex');
-        }
-
-        function salvarSetor(e) {
-            e.preventDefault();
-            const novoSetor = {
-                nome: document.getElementById('setor-nome').value.trim(),
-                familia: document.getElementById('setor-familia').value.trim()
-            };
-
-            appData.setores.push(novoSetor);
-            closeModalSetor();
-            document.getElementById('form-setor').reset();
-            renderAll();
-        }
-
-        function atualizarFamiliaSetor(nomeSetor, novaFamilia) {
-            const set = appData.setores.find(s => s.nome === nomeSetor);
-            if (set) {
-                set.familia = novaFamilia;
-                salvarStorage();
-            }
-        }
-
-        // CADASTRO E GERENCIAMENTO DE O.S.
+        // FUNÇÕES DE MODAL AUXILIARES
         function openModalOS() {
-            const setorSelect = document.getElementById('os-setor');
-            setorSelect.innerHTML = appData.setores.map(s => `<option value="${s.nome}">${s.nome}</option>`).join('');
-
             const colSelect = document.getElementById('os-colaborador');
             colSelect.innerHTML = appData.colaboradores.map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
-
             document.getElementById('modal-os').classList.remove('hidden');
             document.getElementById('modal-os').classList.add('flex');
         }
-
-        function closeModalOS() {
-            document.getElementById('modal-os').classList.add('hidden');
-            document.getElementById('modal-os').classList.remove('flex');
-        }
+        function closeModalOS() { document.getElementById('modal-os').classList.add('hidden'); document.getElementById('modal-os').classList.remove('flex'); }
 
         function salvarOS(e) {
             e.preventDefault();
             const os = {
                 id: document.getElementById('os-codigo').value,
-                familia: document.getElementById('os-familia').value,
+                familia: 'ALIMENTÍCIO',
                 produto: document.getElementById('os-produto').value,
-                setor: document.getElementById('os-setor').value,
-                meta: document.getElementById('os-meta').value,
+                produzirem: document.getElementById('os-produzirem').value,
+                entregarEm: document.getElementById('os-entregarem').value,
+                meta: document.getElementById('os-empenhada').value,
                 colaborador: document.getElementById('os-colaborador').value,
-                status: 'Pendente'
+                status: 'Em Andamento',
+                itens: [
+                    { cod: '227', desc: 'EMBALAGEM PADRÃO', emp: '2', rej: '0', dev: '0', orig: '04', sub: '', un: 'un' }
+                ]
             };
             appData.osList.push(os);
             closeModalOS();
             renderAll();
         }
 
-        // BUSCA POR CRACHÁ / LEITOR
+        function openModalColaborador() { document.getElementById('modal-colaborador').classList.remove('hidden'); document.getElementById('modal-colaborador').classList.add('flex'); }
+        function closeModalColaborador() { document.getElementById('modal-colaborador').classList.add('hidden'); document.getElementById('modal-colaborador').classList.remove('flex'); }
+        function salvarColaborador(e) {
+            e.preventDefault();
+            appData.colaboradores.push({
+                mat: document.getElementById('colab-mat').value.trim(),
+                nome: document.getElementById('colab-nome').value.trim(),
+                funcao: document.getElementById('colab-funcao').value.trim(),
+                atividade: 'Geral', os: ''
+            });
+            closeModalColaborador();
+            renderAll();
+        }
+
+        function openModalSetor() { document.getElementById('modal-setor').classList.remove('hidden'); document.getElementById('modal-setor').classList.add('flex'); }
+        function closeModalSetor() { document.getElementById('modal-setor').classList.add('hidden'); document.getElementById('modal-setor').classList.remove('flex'); }
+        function salvarSetor(e) {
+            e.preventDefault();
+            appData.setores.push({ nome: document.getElementById('setor-nome').value.trim(), familia: document.getElementById('setor-familia').value.trim() });
+            closeModalSetor();
+            renderAll();
+        }
+
         function buscarColaboradorBip() {
             const mat = document.getElementById('input-bip-colaborador').value.trim();
             const col = appData.colaboradores.find(c => c.mat === mat);
             const card = document.getElementById('colaborador-card-resultado');
-
             if (col) {
-                const osVinculada = appData.osList.find(o => o.id === col.os) || {};
                 document.getElementById('res-colab-nome').innerText = col.nome;
                 document.getElementById('res-colab-mat').innerText = `MAT: ${col.mat}`;
                 document.getElementById('res-colab-funcao').innerText = col.funcao;
                 document.getElementById('res-colab-os').innerText = col.os || 'Nenhuma';
-                document.getElementById('res-colab-setor').innerText = osVinculada.setor || '-';
-                document.getElementById('res-colab-familia').innerText = osVinculada.familia || '-';
-                document.getElementById('res-colab-atividade').innerText = col.atividade || 'Geral';
-                document.getElementById('res-colab-tempo-corrido').innerText = col.tempoCorrido || '00:00';
-                document.getElementById('res-colab-tempo-padrao').innerText = col.tempoPadrao || '00:00';
                 card.classList.remove('hidden');
-            } else {
-                alert('Colaborador não encontrado.');
-                card.classList.add('hidden');
-            }
+            } else { alert('Colaborador não encontrado.'); card.classList.add('hidden'); }
         }
 
         function abrirCrachaModal(mat) {
             const col = appData.colaboradores.find(c => c.mat === mat);
             if(!col) return;
-
             document.getElementById('cracha-nome').innerText = col.nome;
             document.getElementById('cracha-funcao').innerText = col.funcao;
             document.getElementById('cracha-mat').innerText = `MAT: ${col.mat}`;
-
             const qrcodeContainer = document.getElementById('qrcode-target');
             qrcodeContainer.innerHTML = '';
             new QRCode(qrcodeContainer, { text: col.mat, width: 100, height: 100 });
-
             document.getElementById('modal-cracha').classList.remove('hidden');
             document.getElementById('modal-cracha').classList.add('flex');
         }
-
-        function closeModalCracha() {
-            document.getElementById('modal-cracha').classList.add('hidden');
-            document.getElementById('modal-cracha').classList.remove('flex');
-        }
-
-        // GERAÇÃO DE O.S. ELABORADA EM PDF
-        function gerarPDFElaborado(osId) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const os = appData.osList.find(o => o.id === osId);
-
-            if(!os) return;
-
-            // Gera imagem do Código de Barras
-            JsBarcode("#barcode-os-canvas", os.id, { format: "CODE128", width: 2, height: 40, displayValue: true });
-            const svgElement = document.getElementById('barcode-os-canvas');
-            const xml = new XMLSerializer().serializeToString(svgElement);
-            const barcodeDataUrl = 'data:image/svg+xml;base64,' + btoa(xml);
-
-            // Cabeçalho da Ficha
-            doc.setFillColor(30, 41, 59);
-            doc.rect(0, 0, 210, 28, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(16);
-            doc.setFont("helvetica", "bold");
-            doc.text("ORDEM DE SERVIÇO E FICHA DE TAREFA", 14, 18);
-
-            // Código de barras na página
-            doc.addImage(barcodeDataUrl, 'SVG', 140, 32, 55, 18);
-
-            // Informações Principais
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(11);
-            doc.text(`CÓDIGO DA O.S.: ${os.id}`, 14, 38);
-            doc.text(`DATA DE EMISSÃO: ${new Date().toLocaleDateString('pt-BR')}`, 14, 45);
-
-            // Tabela / Quadro de Dados
-            doc.setDrawColor(200, 200, 200);
-            doc.rect(14, 55, 182, 45);
-
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "bold");
-            doc.text("PRODUTO:", 18, 63);
-            doc.setFont("helvetica", "normal");
-            doc.text(os.produto, 50, 63);
-
-            doc.setFont("helvetica", "bold");
-            doc.text("FAMÍLIA:", 18, 71);
-            doc.setFont("helvetica", "normal");
-            doc.text(os.familia, 50, 71);
-
-            doc.setFont("helvetica", "bold");
-            doc.text("SETOR:", 18, 79);
-            doc.setFont("helvetica", "normal");
-            doc.text(os.setor, 50, 79);
-
-            doc.setFont("helvetica", "bold");
-            doc.text("META DE PRODUÇÃO:", 18, 87);
-            doc.setFont("helvetica", "normal");
-            doc.text(`${os.meta} Unidades`, 65, 87);
-
-            doc.setFont("helvetica", "bold");
-            doc.text("RESPONSÁVEL:", 18, 95);
-            doc.setFont("helvetica", "normal");
-            doc.text(os.colaborador, 50, 95);
-
-            // Estrutura de Materiais / Apontamentos
-            doc.setFont("helvetica", "bold");
-            doc.text("MATÉRIAS-PRIMAS / COMPONENTES VINCULADOS", 14, 112);
-
-            doc.setFillColor(241, 245, 249);
-            doc.rect(14, 116, 182, 8, 'F');
-            doc.setFontSize(9);
-            doc.text("Item / Descrição", 18, 121);
-            doc.text("Qtd Estimada", 120, 121);
-            doc.text("Status", 165, 121);
-
-            let y = 130;
-            const componentes = [
-                { item: 'Estrutura / Chassi Principal', qtd: `${os.meta} un`, status: 'OK' },
-                { item: 'Revestimento e Espuma Padrão', qtd: `${os.meta * 2} m²`, status: 'Reservado' },
-                { item: 'Kits de Fixação e Parafusos', qtd: `${os.meta * 10} un`, status: 'Separado' }
-            ];
-
-            componentes.forEach(c => {
-                doc.setFont("helvetica", "normal");
-                doc.text(c.item, 18, y);
-                doc.text(c.qtd, 120, y);
-                doc.text(c.status, 165, y);
-                doc.line(14, y + 2, 196, y + 2);
-                y += 8;
-            });
-
-            // Campo de Apontamento Manual / Observações
-            doc.setFont("helvetica", "bold");
-            doc.text("OBSERVAÇÕES E REGISTRO DE INSPEÇÃO DE QUALIDADE", 14, y + 15);
-            doc.rect(14, y + 20, 182, 35);
-
-            doc.save(`OS_Elaborada_${os.id}.pdf`);
-        }
+        function closeModalCracha() { document.getElementById('modal-cracha').classList.add('hidden'); document.getElementById('modal-cracha').classList.remove('flex'); }
 
         function evoluirTarefa(tarId) {
             const tar = appData.tarefas.find(t => t.id === tarId);
             if (tar) {
-                if (tar.status === 'Pendente') tar.status = 'Em Andamento';
-                else if (tar.status === 'Em Andamento') tar.status = 'Concluído';
-                else tar.status = 'Pendente';
+                tar.status = (tar.status === 'Pendente' ? 'Em Andamento' : tar.status === 'Em Andamento' ? 'Concluído' : 'Pendente');
                 renderTarefas();
             }
         }
@@ -827,38 +1101,6 @@
             if (appData.tarefas.length > 0) {
                 evoluirTarefa(appData.tarefas[0].id);
                 alert(`Bip de apontamento recebido para a tarefa ${appData.tarefas[0].id}! Status atualizado.`);
-            }
-        }
-
-        let barcodeBuffer = '';
-        function setupExternalBarcodeScanner() {
-            document.addEventListener('keydown', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-                
-                if (e.key === 'Enter') {
-                    if (barcodeBuffer.length > 0) {
-                        processarBipGlobal(barcodeBuffer);
-                        barcodeBuffer = '';
-                    }
-                } else if (e.key.length === 1) {
-                    barcodeBuffer += e.key;
-                }
-            });
-        }
-
-        function processarBipGlobal(codigo) {
-            codigo = codigo.trim();
-            const col = appData.colaboradores.find(c => c.mat === codigo);
-            if (col) {
-                switchTab('colaboradores');
-                document.getElementById('input-bip-colaborador').value = codigo;
-                buscarColaboradorBip();
-                return;
-            }
-            const tar = appData.tarefas.find(t => t.id === codigo);
-            if (tar) {
-                switchTab('tarefas');
-                evoluirTarefa(codigo);
             }
         }
 
@@ -874,32 +1116,22 @@
 
         function importarDados() {
             const fileInput = document.getElementById('input-import-file');
-            if (fileInput.files.length === 0) {
-                alert('Selecione um arquivo .json');
-                return;
-            }
+            if (fileInput.files.length === 0) return alert('Selecione um arquivo .json');
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     appData = JSON.parse(e.target.result);
                     renderAll();
                     alert('Dados importados com sucesso!');
-                } catch(err) {
-                    alert('Erro ao carregar arquivo.');
-                }
+                } catch(err) { alert('Erro ao carregar arquivo.'); }
             };
             reader.readAsText(fileInput.files[0]);
         }
 
-        function salvarStorage() {
-            localStorage.setItem('pwa_producao_data', JSON.stringify(appData));
-        }
-
+        function salvarStorage() { localStorage.setItem('pwa_producao_data', JSON.stringify(appData)); }
         function carregarStorage() {
             const saved = localStorage.getItem('pwa_producao_data');
-            if (saved) {
-                try { appData = JSON.parse(saved); } catch(e) {}
-            }
+            if (saved) { try { appData = JSON.parse(saved); } catch(e) {} }
         }
 
         function initCharts() {
@@ -907,12 +1139,8 @@
             new Chart(ctx1, {
                 type: 'bar',
                 data: {
-                    labels: ['Tapeçaria', 'Marcenaria', 'Pintura', 'Embalagem'],
-                    datasets: [{
-                        label: 'Unidades',
-                        data: [120, 85, 90, 110],
-                        backgroundColor: '#4f46e5'
-                    }]
+                    labels: ['Processamento', 'Envasamento', 'Embalagem'],
+                    datasets: [{ label: 'Unidades', data: [150, 120, 140], backgroundColor: '#312e81' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
@@ -922,10 +1150,7 @@
                 type: 'doughnut',
                 data: {
                     labels: ['Produtivas', 'Paradas', 'Setup'],
-                    datasets: [{
-                        data: [70, 15, 15],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
-                    }]
+                    datasets: [{ data: [78, 12, 10], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
