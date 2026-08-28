@@ -518,6 +518,84 @@
         }
 
         // Inicialização
+            // Estrutura de Apontamentos via Leitor de Código de Barras
+    let apontamentos = JSON.parse(localStorage.getItem('mes_apontamentos')) || [];
+
+    function processarBip(event) {
+        // O leitor de código de barras envia a tecla 'Enter' (Código 13) no final da leitura
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            const barcodeValue = event.target.value.trim().toUpperCase();
+            if (!barcodeValue) return;
+
+            const agora = new Date();
+            const horaFormatada = agora.toLocaleTimeString('pt-BR');
+
+            // Verifica se a OP já está em aberto para o operador (Finaliza a tarefa)
+            const apontamentoAberto = apontamentos.find(item => item.op === barcodeValue && item.status === 'Em Andamento');
+
+            if (apontamentoAberto) {
+                // Finaliza o tempo da atividade
+                apontamentoAberto.fim = horaFormatada;
+                apontamentoAberto.status = 'Concluído';
+
+                // Calcula a diferença de tempo (em minutos/segundos)
+                const inicioData = new Date(apontamentoAberto.timestampInicio);
+                const diffMs = agora - inicioData;
+                const diffMin = Math.floor(diffMs / 60000);
+                const diffSeg = Math.floor((diffMs % 60000) / 1000);
+                apontamentoAberto.tempoTotal = `${diffMin}m ${diffSeg}s`;
+
+            } else {
+                // Inicia um novo apontamento
+                apontamentos.push({
+                    op: barcodeValue,
+                    operador: 'Operador 01', // Pode ser dinamizado futuramente
+                    inicio: horaFormatada,
+                    timestampInicio: agora.getTime(),
+                    fim: '--:--:--',
+                    tempoTotal: 'Em execução...',
+                    status: 'Em Andamento'
+                });
+            }
+
+            // Salva e limpa o campo de entrada para o próximo bip
+            localStorage.setItem('mes_apontamentos', JSON.stringify(apontamentos));
+            event.target.value = '';
+            renderApontamentos();
+        }
+    }
+
+    function renderApontamentos() {
+        const tbody = document.getElementById('table-apontamentos');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        apontamentos.forEach(item => {
+            const statusColor = item.status === 'Em Andamento' ? 'var(--warning)' : 'var(--success)';
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${item.op}</strong></td>
+                    <td>${item.operador}</td>
+                    <td>${item.inicio}</td>
+                    <td>${item.fim}</td>
+                    <td>${item.tempoTotal}</td>
+                    <td><span class="status-badge" style="background: ${statusColor}; color: #000;">${item.status}</span></td>
+                </tr>
+            `;
+        });
+    }
+
+    function limparApontamentos() {
+        if (confirm('Deseja apagar todo o histórico de apontamentos?')) {
+            apontamentos = [];
+            localStorage.removeItem('mes_apontamentos');
+            renderApontamentos();
+        }
+    }
+
+    // Altera a inicialização para renderizar os apontamentos ao carregar a página
+    renderApontamentos();
+
         renderizarSetores();
     </script>
 </body>
