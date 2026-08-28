@@ -23,6 +23,531 @@
         body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
         /* Sidebar Navigation */
+        #sidebar { width: 260px; background: var(--primary); color: #fff; display: flex; flex-direction: column; padding: 20px 10px; flex-shrink: 0; }
+        #sidebar h2 { font-size: 1.1em; text-align: center; margin-bottom: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-btn { background: none; border: none; color: #94a3b8; padding: 12px 15px; text-align: left; font-size: 0.9em; cursor: pointer; border-radius: 6px; margin-bottom: 5px; width: 100%; }
+        .nav-btn:hover, .nav-btn.active { background: #334155; color: #fff; font-weight: bold; }
+
+        /* Content Area */
+        #main-content { flex: 1; overflow-y: auto; padding: 25px; }
+        .section-page { display: none; }
+        .section-page.active { display: block; }
+
+        /* UI Cards & Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card h3 { font-size: 1em; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+
+        /* Forms & Inputs */
+        label { display: block; font-size: 0.8em; font-weight: 600; margin-top: 10px; color: #475569; }
+        input, select, textarea { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9em; }
+        .btn { padding: 9px 15px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .btn-danger { background: var(--danger); }
+        .btn-warning { background: var(--warning); }
+        .btn-success { background: var(--success); }
+
+        /* Scanner USB Input Field */
+        .scanner-field { background: #f0fdf4; border: 2px dashed var(--success); padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 20px; }
+
+        /* Kanban Board */
+        .kanban-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+        .kanban-col { background: #f1f5f9; padding: 12px; border-radius: 8px; min-height: 300px; }
+        .op-card { background: #fff; border-left: 4px solid var(--accent); padding: 10px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+        /* Badges & Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85em; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+        th { background: #f8fafc; }
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75em; color: #fff; display: inline-block; }
+        .badge-hold { background: var(--danger); }
+
+        /* Layout de Impressão */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; top: 0; left: 0; width: 100%; background: #fff; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATOR SIDEBAR -->
+    <div id="sidebar">
+        <h2>GESTÃO MES 360</h2>
+        <button class="nav-btn active" onclick="navigate('dashboard', this)">Dashboard Executivo</button>
+        <button class="nav-btn" onclick="navigate('bipador', this)">Bipador USB / Leitor</button>
+        <button class="nav-btn" onclick="navigate('op', this)">Ordens de Produção</button>
+        <button class="nav-btn" onclick="navigate('colaboradores', this)">Colaboradores & QR</button>
+        <button class="nav-btn" onclick="navigate('setores', this)">Setores & Atividades</button>
+        <button class="nav-btn" onclick="navigate('tpm', this)">Manutenção (TPM)</button>
+        <button class="nav-btn" onclick="navigate('qualidade', this)">Qualidade & Refugo</button>
+        <button class="nav-btn" onclick="navigate('config', this)">Configuração do Sistema</button>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div id="main-content">
+
+        <!-- TELA 1: DASHBOARD & OEE -->
+        <div id="dashboard" class="section-page active">
+            <div class="grid-4">
+                <div class="card"><span>Eficiência Geral (OEE)</span><h2 id="kpi-oee">85.4%</h2></div>
+                <div class="card"><span>Absenteísmo (RH)</span><h2 id="kpi-absent">2.1%</h2></div>
+                <div class="card"><span>OPs em Paralisação</span><h2 id="kpi-paradas" style="color:var(--danger)">0</h2></div>
+                <div class="card"><span>Índice de Refugo</span><h2 id="kpi-refugo">0.8%</h2></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Produção Eficiente por Setor</h3>
+                    <canvas id="chartProducao"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Tempo de Inatividade / Paradas (TPM)</h3>
+                    <canvas id="chartParadas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA 2: BIPADOR USB AUTOMÁTICO -->
+        <div id="bipador" class="section-page">
+            <div class="card scanner-field">
+                <h3>Estação de Leitura Rápida (Bipador USB / Scanner Barcode)</h3>
+                <p>Mantenha o cursor no campo abaixo e bipe o QR Code da OP ou do Crachá do Colaborador.</p>
+                <input type="text" id="usb-scanner-input" placeholder="Aguardando bip..." autofocus onchange="processarBip(this.value)">
+            </div>
+            <div class="card">
+                <h3>Últimos Apontamentos Realizados</h3>
+                <table>
+                    <thead>
+                        <tr><th>Horário</th><th>Código Bipado</th><th>Ação Registrada</th><th>Operador</th></tr>
+                    </thead>
+                    <tbody id="logs-bipagem"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TELA 3: GESTÃO DE OPS & KANBAN -->
+        <div id="op" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Emitir Nova Ordem de Produção</h3>
+                    <form onsubmit="salvarOP(event)">
+                        <label>Produto / Modelo (Ex: Sofá Retrátil, Armário 3D)</label>
+                        <input type="text" id="op-produto" required>
+                        <label>Setor Inicial</label>
+                        <select id="op-setor-select"></select>
+                        <label>Quantidade Programada</label>
+                        <input type="number" id="op-qtd" required>
+                        <button type="submit" class="btn btn-success">Gerar OP com Código</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Paralisação e Controle de Motivos</h3>
+                    <label>Selecione a OP</label>
+                    <select id="op-parar-select"></select>
+                    <label>Motivo do Parada (Ajuste/Falta de Insumo)</label>
+                    <input type="text" id="op-motivo-parada" placeholder="Ex: Aguardando Tecido / Troca de Fio">
+                    <button class="btn btn-danger" onclick="paralisarOP()">Paralisar OP (HOLD)</button>
+                    <button class="btn btn-success" onclick="retomarOP()">Retomar Operação</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Quadro Kanban de Acompanhamento</h3>
+                <div class="kanban-board" id="kanban-container"></div>
+            </div>
+        </div>
+
+        <!-- TELA 4: COLABORADORES & QR CODE -->
+        <div id="colaboradores" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Cadastrar Colaborador & Gerar Crachá</h3>
+                    <form onsubmit="cadastrarColaborador(event)">
+                        <label>Nome do Operador</label>
+                        <input type="text" id="colab-nome" required>
+                        <label>Matrícula / ID</label>
+                        <input type="text" id="colab-id" required>
+                        <label>Setor de Atuação</label>
+                        <select id="colab-setor-select"></select>
+                        <label>URL / Caminho da Foto</label>
+                        <input type="text" id="colab-foto" placeholder="https://exemplo.com/foto.jpg">
+                        <button type="submit" class="btn">Cadastrar e Gerar QR Code</button>
+                    </form>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3>Crachá Gerado</h3>
+                    <div id="qrcode-box" style="display: flex; justify-content: center; margin: 15px 0;"></div>
+                    <p id="qr-info-label"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA 5: SETORES E ATIVIDADES ILIMITADAS -->
+        <div id="setores" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Gerenciador de Setores Industriais</h3>
+                    <input type="text" id="novo-setor-nome" placeholder="Nome do Setor (Ex: Tapeçaria)">
+                    <button class="btn btn-success" onclick="adicionarSetor()">Incluir Novo Setor</button>
+                    <br><br>
+                    <ul id="lista-setores-ul" style="list-style: none;"></ul>
+                </div>
+                <div class="card">
+                    <h3>Cálculo de Absenteísmo (RH)</h3>
+                    <label>Total de Horas Previstas no Mês</label>
+                    <input type="number" id="horas-previstas" value="1600">
+                    <label>Total de Horas de Ausência / Faltas</label>
+                    <input type="number" id="horas-faltas" value="34">
+                    <button class="btn" onclick="calcularAbsenteismo()">Calcular Absenteísmo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA 6: MANUTENÇÃO PRODUTIVA TOTAL (TPM) -->
+        <div id="tpm" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Abertura de Chamado TPM / Manutenção</h3>
+                    <form onsubmit="registrarTPM(event)">
+                        <label>Equipamento / Máquina</label>
+                        <input type="text" id="tpm-maquina" placeholder="Ex: Seccionadora CNC, Maq. Costura 02" required>
+                        <label>Tipo de Intervenção</label>
+                        <select id="tpm-tipo">
+                            <option value="Corretiva">Corretiva (Máquina Parada)</option>
+                            <option value="Preventiva">Preventiva Programada</option>
+                            <option value="Preditiva">Preditiva / Inspeção</option>
+                        </select>
+                        <label>Descrição da Falha / Ocorrência</label>
+                        <textarea id="tpm-descricao" rows="3" placeholder="Detalhes do problema encontrado..."></textarea>
+                        <button type="submit" class="btn btn-danger">Abrir Chamado Técnico</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Histórico e Ordem de Serviço (TPM)</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Data/Hora</th><th>Máquina</th><th>Tipo</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="tpm-historico"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA 7: QUALIDADE & REFUGO -->
+        <div id="qualidade" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Lançamento de Perda / Refugo de Produção</h3>
+                    <form onsubmit="registrarRefugoForm(event)">
+                        <label>Ordem de Produção (OP)</label>
+                        <select id="qualidade-op-select"></select>
+                        <label>Quantidade Defeituosa / Perda</label>
+                        <input type="number" id="refugo-quantidade" required>
+                        <label>Motivo da Defeito</label>
+                        <select id="refugo-motivo">
+                            <option value="Defeito de Madeira/MDF">Defeito de Madeira/MDF</option>
+                            <option value="Rasgo no Tecido/Espuma">Rasgo no Tecido/Espuma</option>
+                            <option value="Falha na Solda/Elétrica">Falha na Solda/Elétrica</option>
+                            <option value="Erro de Medida/Usinagem">Erro de Medida/Usinagem</option>
+                        </select>
+                        <button type="submit" class="btn btn-warning">Registrar Não-Conformidade</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Registros de Não conformidades (RNC)</h3>
+                    <table>
+                        <thead>
+                            <tr><th>OP</th><th>Qtd</th><th>Motivo</th></tr>
+                        </thead>
+                        <tbody id="qualidade-historico"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA 8: CONFIGURAÇÕES E ACESSO -->
+        <div id="config" class="section-page">
+            <div class="card">
+                <h3>Configurações de Acesso e Parâmetros do Sistema</h3>
+                <label>Nome da Empresa / Planta</label>
+                <input type="text" value="Unidade Industrial - Móveis & Elétrica">
+                <label>Nova Senha de Administrador</label>
+                <input type="password" id="nova-senha" placeholder="Digite a nova senha">
+                <button class="btn btn-warning" onclick="alert('Configurações salvas com sucesso!')">Salvar Alterações</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Dados Base do Sistema
+        let setores = ['Marcenaria', 'Tapeçaria', 'Corte e Costura', 'Setor Elétrico', 'Embalagem'];
+        let ops = [];
+        let colaboradores = [];
+        let tpmLogs = [];
+        let qualidadeLogs = [];
+
+        function navigate(pageId, btnElement) {
+            document.querySelectorAll('.section-page').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.classList.add('active');
+            }
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
+            
+            renderizarSetores();
+            if (pageId === 'dashboard') carregarGraficos();
+            if (pageId === 'qualidade') atualizarSelectQualidade();
+        }
+
+        function adicionarSetor() {
+            const val = document.getElementById('novo-setor-nome').value.trim();
+            if(val && !setores.includes(val)) {
+                setores.push(val);
+                renderizarSetores();
+                document.getElementById('novo-setor-nome').value = '';
+            }
+        }
+
+        function apagarSetor(index) {
+            setores.splice(index, 1);
+            renderizarSetores();
+        }
+
+        function renderizarSetores() {
+            const list = document.getElementById('lista-setores-ul');
+            const selects = [document.getElementById('op-setor-select'), document.getElementById('colab-setor-select')];
+            
+            if(list) {
+                list.innerHTML = '';
+                setores.forEach((s, idx) => {
+                    list.innerHTML += `<li style="display:flex; justify-content:space-between; margin-bottom:8px; background:#f1f5f9; padding:8px; border-radius:4px;">
+                        ${s} <button class="btn btn-danger" style="padding:2px 6px; font-size:0.7em;" onclick="apagarSetor(${idx})">Excluir</button>
+                    </li>`;
+                });
+            }
+
+            selects.forEach(sel => {
+                if(sel) {
+                    sel.innerHTML = '';
+                    setores.forEach(s => sel.innerHTML += `<option value="${s}">${s}</option>`);
+                }
+            });
+            renderizarKanban();
+        }
+
+        function salvarOP(e) {
+            e.preventDefault();
+            const id = 'OP-' + Math.floor(1000 + Math.random() * 9000);
+            ops.push({
+                id: id,
+                produto: document.getElementById('op-produto').value,
+                setor: document.getElementById('op-setor-select').value,
+                qtd: document.getElementById('op-qtd').value,
+                status: 'Em Fila',
+                hold: false,
+                motivoHold: ''
+            });
+            renderizarKanban();
+            alert('Ordem de Produção Criada: ' + id);
+            document.getElementById('op-produto').value = '';
+            document.getElementById('op-qtd').value = '';
+        }
+
+        function renderizarKanban() {
+            const container = document.getElementById('kanban-container');
+            const selectParar = document.getElementById('op-parar-select');
+            if(!container) return;
+            
+            container.innerHTML = '';
+            if(selectParar) selectParar.innerHTML = '';
+
+            let totalHold = 0;
+
+            setores.forEach(setor => {
+                let html = `<div class="kanban-col"><h4>${setor}</h4>`;
+                ops.filter(o => o.setor === setor).forEach(op => {
+                    if(op.hold) totalHold++;
+                    html += `
+                        <div class="op-card" style="${op.hold ? 'border-left-color: var(--danger); background:#fef2f2;' : ''}">
+                            <strong>${op.id}</strong> - ${op.produto}<br>
+                            <small>Qtd: ${op.qtd}</small><br>
+                            ${op.hold ? `<span class="badge badge-hold">PARALISADO: ${op.motivoHold}</span>` : '<span class="badge" style="background:var(--success)">Em Andamento</span>'}
+                        </div>
+                    `;
+                    if(selectParar) selectParar.innerHTML += `<option value="${op.id}">${op.id} - ${op.produto}</option>`;
+                });
+                html += `</div>`;
+                container.innerHTML += html;
+            });
+
+            document.getElementById('kpi-paradas').innerText = totalHold;
+        }
+
+        function paralisarOP() {
+            const select = document.getElementById('op-parar-select');
+            if(!select.value) return;
+            const id = select.value;
+            const motivo = document.getElementById('op-motivo-parada').value;
+            const op = ops.find(o => o.id === id);
+            if(op) {
+                op.hold = true;
+                op.motivoHold = motivo || 'Manutenção/Ajuste';
+                renderizarKanban();
+            }
+        }
+
+        function retomarOP() {
+            const select = document.getElementById('op-parar-select');
+            if(!select.value) return;
+            const id = select.value;
+            const op = ops.find(o => o.id === id);
+            if(op) {
+                op.hold = false;
+                op.motivoHold = '';
+                renderizarKanban();
+            }
+        }
+
+        function cadastrarColaborador(e) {
+            e.preventDefault();
+            const nome = document.getElementById('colab-nome').value;
+            const id = document.getElementById('colab-id').value;
+            const box = document.getElementById('qrcode-box');
+            box.innerHTML = '';
+            new QRCode(box, { text: `COLAB-${id}`, width: 128, height: 128 });
+            document.getElementById('qr-info-label').innerText = `${nome} (ID: ${id})`;
+        }
+
+        function processarBip(codigo) {
+            if(!codigo) return;
+            const tbody = document.getElementById('logs-bipagem');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${new Date().toLocaleTimeString()}</td><td>${codigo}</td><td>Leitura via USB Confirmada</td><td>Operador Padrão</td>`;
+            tbody.prepend(tr);
+            document.getElementById('usb-scanner-input').value = '';
+        }
+
+        function calcularAbsenteismo() {
+            const prev = parseFloat(document.getElementById('horas-previstas').value);
+            const faltas = parseFloat(document.getElementById('horas-faltas').value);
+            const res = ((faltas / prev) * 100).toFixed(2);
+            document.getElementById('kpi-absent').innerText = res + '%';
+        }
+
+        function registrarTPM(e) {
+            e.preventDefault();
+            const maq = document.getElementById('tpm-maquina').value;
+            const tipo = document.getElementById('tpm-tipo').value;
+            const desc = document.getElementById('tpm-descricao').value;
+            
+            tpmLogs.push({
+                hora: new Date().toLocaleTimeString(),
+                maquina: maq,
+                tipo: tipo,
+                status: 'Aberto'
+            });
+
+            const tbody = document.getElementById('tpm-historico');
+            tbody.innerHTML = '';
+            tpmLogs.forEach(log => {
+                tbody.innerHTML += `<tr><td>${log.hora}</td><td>${log.maquina}</td><td>${log.tipo}</td><td><span class="badge badge-hold">${log.status}</span></td></tr>`;
+            });
+
+            alert('Chamado TPM aberto para ' + maq);
+            document.getElementById('tpm-maquina').value = '';
+            document.getElementById('tpm-descricao').value = '';
+        }
+
+        function atualizarSelectQualidade() {
+            const sel = document.getElementById('qualidade-op-select');
+            if(!sel) return;
+            sel.innerHTML = '';
+            ops.forEach(op => {
+                sel.innerHTML += `<option value="${op.id}">${op.id} - ${op.produto}</option>`;
+            });
+        }
+
+        function registrarRefugoForm(e) {
+            e.preventDefault();
+            const opId = document.getElementById('qualidade-op-select').value;
+            const qtd = document.getElementById('refugo-quantidade').value;
+            const motivo = document.getElementById('refugo-motivo').value;
+
+            qualidadeLogs.push({ op: opId, qtd: qtd, motivo: motivo });
+
+            const tbody = document.getElementById('qualidade-historico');
+            tbody.innerHTML = '';
+            qualidadeLogs.forEach(log => {
+                tbody.innerHTML += `<tr><td>${log.op}</td><td>${log.qtd}</td><td>${log.motivo}</td></tr>`;
+            });
+
+            alert('Refugo registrado para a ' + opId);
+            document.getElementById('refugo-quantidade').value = '';
+        }
+
+        function carregarGraficos() {
+            const ctx1 = document.getElementById('chartProducao');
+            const ctx2 = document.getElementById('chartParadas');
+            
+            if(!ctx1 || !ctx2) return;
+
+            if(window.g1) window.g1.destroy();
+            if(window.g2) window.g2.destroy();
+
+            window.g1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: setores,
+                    datasets: [{ label: 'Peças Produzidas', data: [120, 90, 150, 80, 200], backgroundColor: '#0284c7' }]
+                }
+            });
+
+            window.g2 = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Falta de Material', 'Setup/Ajuste', 'Manutenção TPM', 'Falta de Energia'],
+                    datasets: [{ data: [40, 25, 20, 15], backgroundColor: ['#dc2626', '#d97706', '#0284c7', '#64748b'] }]
+                }
+            });
+        }
+
+        // Inicialização
+        renderizarSetores();
+    </script>
+</body>
+</html>
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP & MES Industrial - Móveis, Tapeçaria e Elétrica</title>
+    <!-- Bibliotecas externas para Gráficos e QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --accent: #0284c7;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Navigation */
         #sidebar { width: 260px; background: var(--primary); color: #fff; display: flex; flex-direction: column; padding: 20px 10px; }
         #sidebar h2 { font-size: 1.1em; text-align: center; margin-bottom: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
         .nav-btn { background: none; border: none; color: #94a3b8; padding: 12px 15px; text-align: left; font-size: 0.9em; cursor: pointer; border-radius: 6px; margin-bottom: 5px; width: 100%; }
