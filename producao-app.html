@@ -3,324 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestão da Produção Industrial</title>
+    <title>ERP & MES Industrial - Móveis, Tapeçaria e Elétrica</title>
+    <!-- Bibliotecas externas para Gráficos e QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #2b3a4a;
-            --secondary: #3b82f6;
-            --bg: #f4f6f9;
+            --primary: #1e293b;
+            --accent: #0284c7;
+            --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text: #333333;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --text: #0f172a;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 20px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Login Screen */
-        #login-screen {
-            max-width: 400px; margin: 80px auto; background: var(--card-bg); padding: 30px;
-            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center;
-        }
-        #login-screen input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
-        #login-screen button { width: 100%; padding: 10px; background: var(--secondary); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        /* Sidebar Navigation */
+        #sidebar { width: 260px; background: var(--primary); color: #fff; display: flex; flex-direction: column; padding: 20px 10px; }
+        #sidebar h2 { font-size: 1.1em; text-align: center; margin-bottom: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-btn { background: none; border: none; color: #94a3b8; padding: 12px 15px; text-align: left; font-size: 0.9em; cursor: pointer; border-radius: 6px; margin-bottom: 5px; width: 100%; }
+        .nav-btn:hover, .nav-btn.active { background: #334155; color: #fff; font-weight: bold; }
 
-        /* Dashboard App Interface */
-        #app { display: none; }
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: #fff; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        /* Content Area */
+        #main-content { flex: 1; overflow-y: auto; padding: 25px; }
+        .section-page { display: none; }
+        .section-page.active { display: block; }
 
-        .card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .card h3 { margin-bottom: 15px; border-bottom: 2px solid var(--bg); padding-bottom: 5px; color: var(--primary); }
+        /* UI Cards & Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card h3 { font-size: 1em; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
 
-        /* Form Controls */
-        label { display: block; margin-top: 10px; font-weight: 600; font-size: 0.9em; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px; }
-        button.btn { padding: 8px 15px; background: var(--secondary); color: #fff; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        button.btn-danger { background: var(--danger); }
-        button.btn-success { background: var(--success); }
+        /* Forms & Inputs */
+        label { display: block; font-size: 0.8em; font-weight: 600; margin-top: 10px; color: #475569; }
+        input, select, textarea { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9em; }
+        .btn { padding: 9px 15px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .btn-danger { background: var(--danger); }
+        .btn-warning { background: var(--warning); }
+        .btn-success { background: var(--success); }
+
+        /* Scanner USB Input Field */
+        .scanner-field { background: #f0fdf4; border: 2px dashed var(--success); padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 20px; }
 
         /* Kanban Board */
-        .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
-        .kanban-col { background: #ebedf0; padding: 10px; border-radius: 6px; min-height: 200px; }
-        .kanban-col h4 { text-align: center; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; color: #555; }
-        .op-item { background: #fff; padding: 10px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .kanban-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+        .kanban-col { background: #f1f5f9; padding: 12px; border-radius: 8px; min-height: 300px; }
+        .op-card { background: #fff; border-left: 4px solid var(--accent); padding: 10px; border-radius: 4px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
-        /* OEE Cards */
-        .kpi-container { display: flex; justify-content: space-between; text-align: center; }
-        .kpi { flex: 1; padding: 10px; margin: 0 5px; background: #eef2ff; border-radius: 6px; }
-        .kpi val { display: block; font-size: 1.5em; font-weight: bold; color: var(--secondary); }
+        /* Badges & Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85em; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+        th { background: #f8fafc; }
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75em; color: #fff; display: inline-block; }
+        .badge-hold { background: var(--danger); }
 
-        /* Layout de Impressão de OP */
+        /* Printable Layout */
         @media print {
             body * { visibility: hidden; }
-            #printable-op, #printable-op * { visibility: visible; }
-            #printable-op { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; background: #fff; }
-            .no-print { display: none !important; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; top: 0; left: 0; width: 100%; background: #fff; padding: 20px; }
         }
-        #printable-op { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
-    <div id="login-screen">
-        <h2>Sistema de Produção</h2>
-        <p style="font-size: 0.85em; color: #666; margin-bottom: 15px;">Acesso Restrito ao Painel Industrial</p>
-        <input type="text" id="username" placeholder="Usuário (admin)">
-        <input type="password" id="password" placeholder="Senha (1234)">
-        <button onclick="login()">Entrar no Sistema</button>
-        <p id="login-error" style="color: var(--danger); font-size: 0.8em; margin-top: 10px;"></p>
+    <!-- NAVIGATOR SIDEBAR -->
+    <div id="sidebar">
+        <h2>GESTÃO MES 360</h2>
+        <button class="nav-btn active" onclick="navigate('dashboard')">Dashboard Executivo</button>
+        <button class="nav-btn" onclick="navigate('bipador')">Bipador USB / Leitor</button>
+        <button class="nav-btn" onclick="navigate('op')">Ordens de Produção</button>
+        <button class="nav-btn" onclick="navigate('colaboradores')">Colaboradores & QR</button>
+        <button class="nav-btn" onclick="navigate('setores')">Setores & Atividades</button>
+        <button class="nav-btn" onclick="navigate('tpm')">Manutenção (TPM)</button>
+        <button class="nav-btn" onclick="navigate('qualidade')">Qualidade & Refugo</button>
+        <button class="nav-btn" onclick="navigate('config')">Configuração do Sistema</button>
     </div>
 
-    <!-- PAINEL PRINCIPAL -->
-    <div id="app">
-        <header>
-            <h2>Painel de Controle da Produção Industrial</h2>
-            <button class="btn btn-danger no-print" onclick="logout()">Sair</button>
-        </header>
+    <!-- MAIN CONTENT AREA -->
+    <div id="main-content">
 
-        <!-- INDICADORES DE DESEMPENHO (OEE & KPIs) -->
-        <div class="card" style="margin-bottom: 20px;">
-            <h3>Indicadores de Desempenho em Tempo Real (OEE)</h3>
-            <div class="kpi-container">
-                <div class="kpi"><span>Disponibilidade</span><val id="kpi-disp">95%</val></div>
-                <div class="kpi"><span>Desempenho</span><val id="kpi-desemp">88%</val></div>
-                <div class="kpi"><span>Qualidade</span><val id="kpi-qual">99%</val></div>
-                <div class="kpi" style="background: #e0e7ff;"><span style="font-weight:bold;">OEE Geral</span><val id="kpi-oee">82.8%</val></div>
+        <!-- TELA 1: DASHBOARD & OEE -->
+        <div id="dashboard" class="section-page active">
+            <div class="grid-4">
+                <div class="card"><span>Eficiência Geral (OEE)</span><h2 id="kpi-oee">85.4%</h2></div>
+                <div class="card"><span>Absenteísmo (RH)</span><h2 id="kpi-absent">2.1%</h2></div>
+                <div class="card"><span>OPs em Paralisação</span><h2 id="kpi-paradas" style="color:var(--danger)">0</h2></div>
+                <div class="card"><span>Índice de Refugo</span><h2 id="kpi-refugo">0.8%</h2></div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Produção Eficiente por Setor</h3>
+                    <canvas id="chartProducao"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Tempo de Inatividade / Paradas (TPM)</h3>
+                    <canvas id="chartParadas"></canvas>
+                </div>
             </div>
         </div>
 
-        <div class="grid">
-            <!-- CADASTRO E GERADOR DE OP -->
+        <!-- TELA 2: BIPADOR USB AUTOMÁTICO -->
+        <div id="bipador" class="section-page">
+            <div class="card scanner-field">
+                <h3>Estação de Leitura Rápida (Bipador USB / Scanner Barcode)</h3>
+                <p>Mantenha o cursor no campo abaixo e bipe o QR Code da OP ou do Crachá do Colaborador.</p>
+                <input type="text" id="usb-scanner-input" placeholder="Aguardando bip..." autofocus onchange="processarBip(this.value)">
+            </div>
             <div class="card">
-                <h3>Emissão de Ordem de Produção (OP)</h3>
-                <form id="op-form" onsubmit="criarOP(event)">
-                    <label>Código do Produto / Descrição</label>
-                    <input type="text" id="op-produto" required placeholder="Ex: Peça Técnica XYZ">
-                    
-                    <label>Quantidade Planejada</label>
-                    <input type="number" id="op-qtd" required placeholder="Ex: 500">
-                    
-                    <label>Setor / Centro de Trabalho</label>
-                    <select id="op-setor">
-                        <option value="Usinagem">Usinagem</option>
-                        <option value="Corte">Corte</option>
-                        <option value="Montagem">Montagem</option>
-                        <option value="Pintura">Pintura</option>
-                        <option value="Embalagem">Embalagem</option>
-                    </select>
+                <h3>Últimos Apontamentos Realizados</h3>
+                <table>
+                    <thead>
+                        <tr><th>Horário</th><th>Código Bipado</th><th>Ação Registrada</th><th>Operador</th></tr>
+                    </thead>
+                    <tbody id="logs-bipagem"></tbody>
+                </table>
+            </div>
+        </div>
 
-                    <label>Lista de Materiais (BOM)</label>
-                    <textarea id="op-bom" rows="2" placeholder="Ex: 10kg Aço Inox, 20 Parafusos M8"></textarea>
-
-                    <button type="submit" class="btn btn-success">Gerar Ordem de Produção</button>
-                </form>
+        <!-- TELA 3: GESTÃO DE OPS & KANBAN -->
+        <div id="op" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Emitir Nova Ordem de Produção</h3>
+                    <form onsubmit="salvarOP(event)">
+                        <label>Produto / Modelo (Ex: Sofá Retrátil, Armário 3D)</label>
+                        <input type="text" id="op-produto" required>
+                        <label>Setor Inicial</label>
+                        <select id="op-setor-select"></select>
+                        <label>Quantidade Programada</label>
+                        <input type="number" id="op-qtd" required>
+                        <button type="submit" class="btn btn-success">Gerar OP com Código</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Paralisação e Controle de Motivos</h3>
+                    <label>Selecione a OP</label>
+                    <select id="op-parar-select"></select>
+                    <label>Motivo do Parada (Ajuste/Falta de Insumo)</label>
+                    <input type="text" id="op-motivo-parada" placeholder="Ex: Aguardando Tecido / Troca de Fio">
+                    <button class="btn btn-danger" onclick="paralisarOP()">Paralisar OP (HOLD)</button>
+                    <button class="btn btn-success" onclick="retomarOP()">Retomar Operação</button>
+                </div>
             </div>
 
-            <!-- APONTAMENTO E REGISTRO DE PARADAS -->
             <div class="card">
-                <h3>Apontamento de Chão de Fábrica</h3>
-                <label>Selecione a OP</label>
-                <select id="apontamento-op-select"></select>
-
-                <label>Ação da Operação</label>
-                <div style="display: flex; gap: 5px;">
-                    <button class="btn btn-success" onclick="registrarAcao('Iniciada')">Iniciar</button>
-                    <button class="btn" style="background: var(--warning);" onclick="registrarAcao('Pausada')">Pausar</button>
-                    <button class="btn btn-danger" onclick="registrarAcao('Concluída')">Encerrar</button>
-                </div>
-
-                <hr style="margin: 15px 0;">
-
-                <label>Apontamento de Refugo / Sucata</label>
-                <input type="number" id="refugo-qtd" placeholder="Qtd de Peças Defeituosas">
-                <button class="btn btn-danger" onclick="registrarRefugo()">Lançar Perda</button>
+                <h3>Quadro Kanban de Acompanhamento</h3>
+                <div class="kanban-board" id="kanban-container"></div>
             </div>
         </div>
 
-        <!-- PAINEL KANBAN DA PRODUÇÃO -->
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>Acompanhamento do Chão de Fábrica (Kanban)</h3>
-                <button class="btn" onclick="exportarDadosJSON()">Exportar Dados (JSON)</button>
-            </div>
-            <div class="kanban">
-                <div class="kanban-col">
-                    <h4>Aguardando</h4>
-                    <div id="col-aguardando"></div>
+        <!-- TELA 4: COLABORADORES & QR CODE -->
+        <div id="colaboradores" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Cadastrar Colaborador & Gerar Crachá</h3>
+                    <form onsubmit="cadastrarColaborador(event)">
+                        <label>Nome do Operador</label>
+                        <input type="text" id="colab-nome" required>
+                        <label>Matrícula / ID</label>
+                        <input type="text" id="colab-id" required>
+                        <label>Setor de Atuação</label>
+                        <select id="colab-setor-select"></select>
+                        <label>URL / Caminho da Foto</label>
+                        <input type="text" id="colab-foto" placeholder="https://exemplo.com/foto.jpg">
+                        <button type="submit" class="btn">Cadastrar e Gerar QR Code</button>
+                    </form>
                 </div>
-                <div class="kanban-col">
-                    <h4>Em Produção</h4>
-                    <div id="col-producao"></div>
-                </div>
-                <div class="kanban-col">
-                    <h4>Qualidade / Inspeção</h4>
-                    <div id="col-qualidade"></div>
-                </div>
-                <div class="kanban-col">
-                    <h4>Concluído</h4>
-                    <div id="col-concluido"></div>
+                <div class="card" style="text-align: center;">
+                    <h3>Crachá Gerado</h3>
+                    <div id="qrcode-box" style="display: flex; justify-content: center; margin: 15px 0;"></div>
+                    <p id="qr-info-label"></p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ESPELHO IMPRESSO DA ORDEM DE PRODUÇÃO -->
-    <div id="printable-op">
-        <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">ORDEM DE PRODUÇÃO INDUSTRIAL</h1>
-        <br>
-        <p><strong>Número da OP:</strong> <span id="print-op-id"></span></p>
-        <p><strong>Produto:</strong> <span id="print-op-produto"></span></p>
-        <p><strong>Quantidade Programada:</strong> <span id="print-op-qtd"></span></p>
-        <p><strong>Setor Destino:</strong> <span id="print-op-setor"></span></p>
-        <p><strong>Data de Emissão:</strong> <span id="print-op-data"></span></p>
-        <br>
-        <h3>Estrutura de Matéria-Prima (BOM)</h3>
-        <p id="print-op-bom" style="border: 1px solid #ccc; padding: 10px; margin-top: 5px;"></p>
-        <br><br>
-        <div style="text-align: center; margin-top: 30px;">
-            <p>________________________________________________</p>
-            <p>Assinatura do Responsável / Controle de Qualidade</p>
-            <br>
-            <p style="font-family: monospace; font-size: 1.2em;">||| | ||||| ||| |||| || | |||||||| |||</p>
-            <p style="font-size: 0.8em;">CÓDIGO DE RASTREABILIDADE INDUSTRIAL</p>
+        <!-- TELA 5: SETORES E ATIVIDADES ILIMITADAS -->
+        <div id="setores" class="section-page">
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Gerenciador de Setores Industriais</h3>
+                    <input type="text" id="novo-setor-nome" placeholder="Nome do Setor (Ex: Tapeçaria)">
+                    <button class="btn btn-success" onclick="adicionarSetor()">Incluir Novo Setor</button>
+                    <br><br>
+                    <ul id="lista-setores-ul" style="list-style: none;"></ul>
+                </div>
+                <div class="card">
+                    <h3>Cálculo de Absenteísmo (RH)</h3>
+                    <label>Total de Horas Previstas no Mês</label>
+                    <input type="number" id="horas-previstas" value="1600">
+                    <label>Total de Horas de Ausência / Faltas</label>
+                    <input type="number" id="horas-faltas" value="34">
+                    <button class="btn" onclick="calcularAbsenteismo()">Calcular Absenteísmo</button>
+                </div>
+            </div>
         </div>
+
+        <!-- TELA 6: CONFIGURAÇÕES E ACESSO -->
+        <div id="config" class="section-page">
+            <div class="card">
+                <h3>Configurações de Acesso e Parâmetros do Sistema</h3>
+                <label>Nome da Empresa / Planta</label>
+                <input type="text" value="Unidade Industrial - Móveis & Elétrica">
+                <label>Nova Senha de Administrador</label>
+                <input type="password" id="nova-senha" placeholder="Digite a nova senha">
+                <button class="btn btn-warning" onclick="alert('Configurações salvas!')">Salvar Alterações</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        let ops = JSON.parse(localStorage.getItem('ops_data')) || [];
+        // Dados Base do Sistema
+        let setores = ['Marcenaria', 'Tapeçaria', 'Corte e Costura', 'Setor Elétrico', 'Embalagem'];
+        let ops = [];
+        let colaboradores = [];
 
-        function login() {
-            const u = document.getElementById('username').value.trim().toLowerCase();
-            const p = document.getElementById('password').value.trim();
-            if (u === 'admin' && p === '1234') {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
-                renderizarKanban();
-            } else {
-                document.getElementById('login-error').innerText = 'Usuário ou senha inválidos.';
+        function navigate(pageId) {
+            document.querySelectorAll('.section-page').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            renderizarSetores();
+            if (pageId === 'dashboard') carregarGraficos();
+        }
+
+        function adicionarSetor() {
+            const val = document.getElementById('novo-setor-nome').value.trim();
+            if(val && !setores.includes(val)) {
+                setores.push(val);
+                renderizarSetores();
+                document.getElementById('novo-setor-nome').value = '';
             }
         }
 
-        function logout() {
-            document.getElementById('app').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'block';
+        function apagarSetor(index) {
+            setores.splice(index, 1);
+            renderizarSetores();
         }
 
-        function criarOP(e) {
-            e.preventDefault();
-            const novaOP = {
-                id: 'OP-' + Math.floor(1000 + Math.random() * 9000),
-                produto: document.getElementById('op-produto').value,
-                qtd: document.getElementById('op-qtd').value,
-                setor: document.getElementById('op-setor').value,
-                bom: document.getElementById('op-bom').value,
-                status: 'Aguardando',
-                refugo: 0,
-                data: new Date().toLocaleDateString('pt-BR')
-            };
-            ops.push(novaOP);
-            salvarEAtualizar();
-            document.getElementById('op-form').reset();
-        }
+        function renderizarSetores() {
+            const list = document.getElementById('lista-setores-ul');
+            const selects = [document.getElementById('op-setor-select'), document.getElementById('colab-setor-select')];
+            
+            if(list) {
+                list.innerHTML = '';
+                setores.forEach((s, idx) => {
+                    list.innerHTML += `<li style="display:flex; justify-content:space-between; margin-bottom:8px; background:#f1f5f9; padding:8px; border-radius:4px;">
+                        ${s} <button class="btn btn-danger" style="padding:2px 6px; font-size:0.7em;" onclick="apagarSetor(${idx})">Excluir</button>
+                    </li>`;
+                });
+            }
 
-        function salvarEAtualizar() {
-            localStorage.setItem('ops_data', JSON.stringify(ops));
+            selects.forEach(sel => {
+                if(sel) {
+                    sel.innerHTML = '';
+                    setores.forEach(s => sel.innerHTML += `<option value="${s}">${s}</option>`);
+                }
+            });
             renderizarKanban();
         }
 
+        function salvarOP(e) {
+            e.preventDefault();
+            const id = 'OP-' + Math.floor(1000 + Math.random() * 9000);
+            ops.push({
+                id: id,
+                produto: document.getElementById('op-produto').value,
+                setor: document.getElementById('op-setor-select').value,
+                qtd: document.getElementById('op-qtd').value,
+                status: 'Em Fila',
+                hold: false,
+                motivoHold: ''
+            });
+            renderizarKanban();
+            alert('Ordem de Produção Criada: ' + id);
+        }
+
         function renderizarKanban() {
-            const cols = {
-                'Aguardando': document.getElementById('col-aguardando'),
-                'Em Produção': document.getElementById('col-producao'),
-                'Qualidade': document.getElementById('col-qualidade'),
-                'Concluído': document.getElementById('col-concluido')
-            };
+            const container = document.getElementById('kanban-container');
+            const selectParar = document.getElementById('op-parar-select');
+            if(!container) return;
+            
+            container.innerHTML = '';
+            if(selectParar) selectParar.innerHTML = '';
 
-            Object.keys(cols).forEach(key => cols[key].innerHTML = '');
-            const selectApontamento = document.getElementById('apontamento-op-select');
-            selectApontamento.innerHTML = '';
-
-            ops.forEach(op => {
-                const el = document.createElement('div');
-                el.className = 'op-item';
-                el.innerHTML = `
-                    <strong>${op.id}</strong> - ${op.produto}<br>
-                    <small>Qtd: ${op.qtd} | Setor: ${op.setor}</small><br>
-                    <button class="btn" style="font-size:0.7em; padding: 2px 5px; margin-top:5px;" onclick="imprimirOP('${op.id}')">Imprimir OP</button>
-                    <button class="btn" style="font-size:0.7em; padding: 2px 5px; margin-top:5px; background:#666;" onclick="avancarStatus('${op.id}')">Avançar Status</button>
-                `;
-
-                if (cols[op.status]) cols[op.status].appendChild(el);
-
-                const opt = document.createElement('option');
-                opt.value = op.id;
-                opt.textContent = `${op.id} (${op.produto})`;
-                selectApontamento.appendChild(opt);
+            setores.forEach(setor => {
+                let html = `<div class="kanban-col"><h4>${setor}</h4>`;
+                ops.filter(o => o.setor === setor).forEach(op => {
+                    html += `
+                        <div class="op-card" style="${op.hold ? 'border-left-color: var(--danger); background:#fef2f2;' : ''}">
+                            <strong>${op.id}</strong> - ${op.produto}<br>
+                            <small>Qtd: ${op.qtd}</small><br>
+                            ${op.hold ? `<span class="badge badge-hold">PARALISADO: ${op.motivoHold}</span>` : '<span class="badge" style="background:var(--success)">Em Andamento</span>'}
+                        </div>
+                    `;
+                    if(selectParar) selectParar.innerHTML += `<option value="${op.id}">${op.id} - ${op.produto}</option>`;
+                });
+                html += `</div>`;
+                container.innerHTML += html;
             });
         }
 
-        function avancarStatus(id) {
+        function paralisarOP() {
+            const id = document.getElementById('op-parar-select').value;
+            const motivo = document.getElementById('op-motivo-parada').value;
             const op = ops.find(o => o.id === id);
-            if (!op) return;
-            const fluxo = ['Aguardando', 'Em Produção', 'Qualidade', 'Concluído'];
-            let idx = fluxo.indexOf(op.status);
-            if (idx < fluxo.length - 1) {
-                op.status = fluxo[idx + 1];
-                salvarEAtualizar();
+            if(op) {
+                op.hold = true;
+                op.motivoHold = motivo || 'Manutenção/Ajuste';
+                renderizarKanban();
             }
         }
 
-        function registrarAcao(acao) {
-            const id = document.getElementById('apontamento-op-select').value;
+        function retomarOP() {
+            const id = document.getElementById('op-parar-select').value;
             const op = ops.find(o => o.id === id);
-            if (!op) return;
-            if (acao === 'Iniciada') op.status = 'Em Produção';
-            if (acao === 'Concluída') op.status = 'Concluído';
-            salvarEAtualizar();
-            alert(`Status da ${op.id} alterado para: ${op.status}`);
-        }
-
-        function registrarRefugo() {
-            const id = document.getElementById('apontamento-op-select').value;
-            const qtd = parseInt(document.getElementById('refugo-qtd').value) || 0;
-            const op = ops.find(o => o.id === id);
-            if (op && qtd > 0) {
-                op.refugo = (op.refugo || 0) + qtd;
-                salvarEAtualizar();
-                alert(`${qtd} peças registradas como refugo na ${op.id}`);
-                document.getElementById('refugo-qtd').value = '';
+            if(op) {
+                op.hold = false;
+                op.motivoHold = '';
+                renderizarKanban();
             }
         }
 
-        function imprimirOP(id) {
-            const op = ops.find(o => o.id === id);
-            if (!op) return;
-
-            document.getElementById('print-op-id').innerText = op.id;
-            document.getElementById('print-op-produto').innerText = op.produto;
-            document.getElementById('print-op-qtd').innerText = op.qtd;
-            document.getElementById('print-op-setor').innerText = op.setor;
-            document.getElementById('print-op-data').innerText = op.data;
-            document.getElementById('print-op-bom').innerText = op.bom || 'Nenhuma matéria-prima especificada.';
-
-            document.getElementById('printable-op').style.display = 'block';
-            window.print();
-            document.getElementById('printable-op').style.display = 'none';
+        function cadastrarColaborador(e) {
+            e.preventDefault();
+            const nome = document.getElementById('colab-nome').value;
+            const id = document.getElementById('colab-id').value;
+            const box = document.getElementById('qrcode-box');
+            box.innerHTML = '';
+            new QRCode(box, { text: `COLAB-${id}`, width: 128, height: 128 });
+            document.getElementById('qr-info-label').innerText = `${nome} (ID: ${id})`;
         }
 
-        function exportarDadosJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ops, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "producao_backup.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+        function processarBip(codigo) {
+            if(!codigo) return;
+            const tbody = document.getElementById('logs-bipagem');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${new Date().toLocaleTimeString()}</td><td>${codigo}</td><td>Leitura via USB Confirmada</td><td>Operador Padrão</td>`;
+            tbody.prepend(tr);
+            document.getElementById('usb-scanner-input').value = '';
         }
+
+        function calcularAbsenteismo() {
+            const prev = parseFloat(document.getElementById('horas-previstas').value);
+            const faltas = parseFloat(document.getElementById('horas-faltas').value);
+            const res = ((faltas / prev) * 100).toFixed(2);
+            document.getElementById('kpi-absent').innerText = res + '%';
+        }
+
+        function carregarGraficos() {
+            const ctx1 = document.getElementById('chartProducao');
+            const ctx2 = document.getElementById('chartParadas');
+            
+            if(window.g1) window.g1.destroy();
+            if(window.g2) window.g2.destroy();
+
+            window.g1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: setores,
+                    datasets: [{ label: 'Peças Produzidas', data: [120, 90, 150, 80, 200], backgroundColor: '#0284c7' }]
+                }
+            });
+
+            window.g2 = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Falta de Material', 'Setup/Ajuste', 'Manutenção TPM', 'Falta de Energia'],
+                    datasets: [{ data: [40, 25, 20, 15], backgroundColor: ['#dc2626', '#d97706', '#0284c7', '#64748b'] }]
+                }
+            });
+        }
+
+        // Inicialização
+        renderizarSetores();
     </script>
 </body>
 </html>
